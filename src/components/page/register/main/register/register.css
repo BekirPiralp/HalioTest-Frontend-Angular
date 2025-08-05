@@ -1,0 +1,15 @@
+.card{
+    min-width: 400px;
+    border-radius: 30px;
+    padding: 3rem !important;
+}
+
+.btns{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btns .btn{
+    width: 10rem;
+}
