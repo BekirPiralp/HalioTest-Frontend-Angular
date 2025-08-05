@@ -3,16 +3,15 @@ import { BaseUrl } from "../base-url";
 
 export class UsersUrl extends BaseUrl {
     constructor() {
-        UsersUrl.modelName="Users";
-        super();
+        super("Users");
     }
 
     
-    /*public static override  _update():string {
+    /*public override  _update():string {
             return `${AppUrl.BaseUrl}/api/${this.modelName}/Update`;
     }*/
 
-    public static _getUser():string{
+    public _getUser():string{
         return `${AppUrl.BaseUrl}/api/${this.modelName}/GetUser`;
     }
 }
