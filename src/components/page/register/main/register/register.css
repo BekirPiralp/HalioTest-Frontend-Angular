@@ -31,6 +31,8 @@ h3{
 
     text-shadow: -3px -3px 5px white, 3px -3px 5px white, 0px 3px 5px black;
 
+    user-select: none;
+
 }
 
 .form-control{
@@ -82,6 +84,7 @@ h3{
 
     transition:  0.3s linear, background-color 0s ease, backdrop-filter 0s ease;
     
+    user-select: none;
 }
 
 .form-group input:focus + .form-label,
