@@ -1,7 +1,45 @@
+.wallper{
+    background-image: url('/assets/images/registerWallper.jpg');
+    background-repeat: no-repeat;
+    background-size:cover;
+}
+
 .card{
     min-width: 400px;
     border-radius: 30px;
     padding: 3rem !important;
+    position: relative;
+
+    background-color: rgba(255, 255, 255, 0.3);
+
+    backdrop-filter: blur(5px) brightness(75%);
+}
+
+h3{
+    font-family: 'Georgia', serif;
+    font-weight: lighter;
+    font-size: xx-large;
+
+    position: absolute;
+
+    left: 50%;
+    top:0px;
+
+    transform: translateX(-50%) translateY(-60%);
+
+    padding: 0px !important;
+
+    text-shadow: -3px -3px 5px white, 3px -3px 5px white, 0px 3px 5px black;
+
+}
+
+.form-control{
+    box-shadow: inset 0px -5px 5px -3px var(--bs-primary);
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--bs-primary);
+
+    background-color: rgba(255, 255, 255, 0.363);
+    
 }
 
 .btns{
@@ -12,4 +50,65 @@
 
 .btns .btn{
     width: 10rem;
+    font-size: 20px !important;
+    font-weight: bolder;
+    letter-spacing: 2px;
+}
+
+.btn:disabled{
+    color: gray !important;
+}
+
+.form-group{
+    position: relative;
+}
+
+.form-control::placeholder{
+   color: transparent;
+}
+
+.form-label{
+    position: absolute;
+    width: 100%;
+    
+    margin: 0px !important;
+    padding-left: 1em;
+    left: 0px;
+    top: 0px;
+
+    background-color:rgba(255, 255, 255, 0);
+
+    transform: translateY(+25%);
+
+    transition:  0.3s linear, background-color 0s ease, backdrop-filter 0s ease;
+    
+}
+
+.form-group input:focus + .form-label,
+.form-group input:not(:placeholder-shown) + .form-label{
+    color: whitesmoke;
+    font-size: smaller;
+    font-weight:bold;
+    letter-spacing: 1px;
+
+    padding-left: 1em;
+    padding-right: 1em;
+
+    position: absolute;
+    width: fit-content;
+    left:1.5em;
+    top:0px;
+    background-color: rgba(255, 255, 255, 0.363);;
+    transform: translateY(-50%);
+
+    border-left: 1px solid aqua;
+    border-right: 1px solid aqua;
+    border-radius: 10%;
+
+    backdrop-filter: blur(50px);
+}
+
+.form-group input:focus,.form-group input:not(:placeholder-shown){
+    border: 1px solid rgba(0, 255, 255, 0.322);
+    border-bottom: 1px solid var(--bs-primary);
 }
