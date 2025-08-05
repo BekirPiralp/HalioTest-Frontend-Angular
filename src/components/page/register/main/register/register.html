@@ -4,11 +4,11 @@
         <form #registerForm="ngForm" (ngSubmit)="onSubmit()">
             <div class="form-row d-flex flex-row mb-4 justify-content-between">
                 <div class="form-group me-3"> 
-                    <input type="text" required class="form-control" name="name" id="name" placeholder="Sample" [(ngModel)]="this._user.name" >
+                    <input #nameModel="ngModel" type="text" required class="form-control" name="name" id="name" placeholder="Sample" [(ngModel)]="this._user.name" >
                     <label for="name" class="form-label">Name</label>
                 </div>
                 <div class="form-group "> 
-                    <input type="text" required class="form-control" name="surname" id="surname" placeholder="Exams" [(ngModel)]="this._user.surName">
+                    <input #surnameModel="ngModel" type="text" required class="form-control" name="surname" id="surname" placeholder="Exams" [(ngModel)]="this._user.surName">
                     <label for="surname" class="form-label">Surname</label>
                 </div>
             </div>
@@ -37,3 +37,4 @@
         </form>
     </div>
 </div>
+<app-loading *ngIf="this.isLoading"></app-loading>
