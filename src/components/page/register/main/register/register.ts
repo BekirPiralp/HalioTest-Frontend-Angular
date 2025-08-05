@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { AppUrl } from '../../../../../services/url/app-url';
 import alertify from 'alertifyjs';
 import { catchError, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +18,7 @@ import { catchError, throwError } from 'rxjs';
 })
 export class Register {
 
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient, private _router:Router) {
 
 
   }
@@ -41,5 +42,11 @@ export class Register {
       }
     );
   }
+
+
+  onCancel() {
+    this._router.navigate(["/login"]);
+}
+
 
 }
