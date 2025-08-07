@@ -1,38 +1,75 @@
 <div class="d-flex vh-100 justify-content-center align-items-center bg-light wallper">
     <div class="card shadow-sm p-4">
         <h3 class="mb-4 text-center text-primary">Register</h3>
-        <form #registerForm="ngForm" (ngSubmit)="onSubmit()">
-            <div class="form-row d-flex flex-row mb-4 justify-content-between">
-                <div class="form-group me-3"> 
-                    <input #nameModel="ngModel" type="text" required class="form-control" name="name" id="name" placeholder="Sample" [(ngModel)]="this._user.name" >
+        <form #registerForm="ngForm" class="needs-validation" (ngSubmit)="onSubmit()">
+            <div class="form-row d-flex flex-row justify-content-between">
+                <div class="form-group me-3">
+                    <input #nameModel="ngModel" type="text" required class="form-control" minlength="3" name="name"
+                        id="name" pattern="^[A-Za-zÇçĞğŞşÖöÜüİı]+( [A-Za-zÇçĞğŞşÖöÜüİı]+)*$"
+                        oninput="this.value = this.value.replace(/[^A-Za-zÇçĞğŞşÖöÜüİı ]/g, '')" placeholder="Sample"
+                        [(ngModel)]="this._user.name">
                     <label for="name" class="form-label">Name</label>
+                    <div *ngIf="nameModel.touched && nameModel.invalid" class="text-danger small warning">
+                        * Zorunludur.
+                    </div>
                 </div>
-                <div class="form-group "> 
-                    <input #surnameModel="ngModel" type="text" required class="form-control" name="surname" id="surname" placeholder="Exams" [(ngModel)]="this._user.surName">
+                <div class="form-group ">
+                    <input #surnameModel="ngModel" type="text" required class="form-control" name="surname" id="surname"
+                        pattern="^[A-Za-zÇçĞğŞşÖöÜüİı]+( [A-Za-zÇçĞğŞşÖöÜüİı]+)*$"
+                        oninput="this.value = this.value.replace(/[^A-Za-zÇçĞğŞşÖöÜüİı ]/g, '')" placeholder="Exams"
+                        minlength="3" [(ngModel)]="this._user.surName">
                     <label for="surname" class="form-label">Surname</label>
+                    <div *ngIf="surnameModel.touched && surnameModel.invalid" class="text-danger small warning">
+                        * Zorunludur.
+                    </div>
                 </div>
             </div>
-            <div class="form-row mb-4">
+            <div class="form-row">
                 <div class="form-group">
-                    <input type="tel" required class="form-control" name="phoneNumber" id="phoneNumber" placeholder="+905554443322" maxlength="16" minlength="10" oninput="this.value = this.value.replace(/[^+\d]/g, '')" pattern="\+?\d{10,15}$" [(ngModel)]="this._user.phoneNumber">
+                    <input #phoneNumberModel="ngModel" type="tel" required class="form-control" name="phoneNumber"
+                        id="phoneNumber" placeholder="+905554443322" maxlength="16" minlength="10"
+                        oninput="this.value = this.value.replace(/[^+\d]/g, '')" pattern="\+?\d{10,15}$"
+                        [(ngModel)]="this._user.phoneNumber">
                     <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <div *ngIf="phoneNumberModel.touched && phoneNumberModel.invalid" class="text-danger small warning">
+                        * Zorunludur.
+                    </div>
                 </div>
             </div>
-            <div class="form-row mb-4">
+            <div class="form-row ">
                 <div class="form-group">
-                    <input class="form-control" required type="email" name="email" id="email" placeholder="sample@mail.com" [(ngModel)]="this._user.email">
+                    <input #emailModel="ngModel" class="form-control" type="email" name="email" id="email"
+                        oninput="this.value = this.value.replace(/[^A-Za-z0-9.@_\-\+]/g, '')"
+                        pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                        placeholder="sample@mail.com" [(ngModel)]="_user.email" required />
                     <label class="form-label" for="email">Email</label>
+                    <div *ngIf="emailModel.touched && emailModel.invalid" class="text-danger small warning">
+                        <div *ngIf="emailModel.errors?.['required']" >* Zorunludur.</div>
+                        <div *ngIf="emailModel.errors?.['pattern']">* Lütfen geçerli bir email giriniz.</div>
+                    </div>
                 </div>
             </div>
             <div class="form-row mb-4">
                 <div class="form-group">
-                    <input type="password" required class="form-control" name="pswrd" id="psswrd" placeholder="Tr.123" pattern="^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^A-Za-z0-9]).{6,}$" [(ngModel)]="this._user.password">
+                    <input #passwordModel="ngModel" type="password" required class="form-control" name="pswrd"
+                        id="psswrd" placeholder="Tr.123"
+                        pattern="^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^A-Za-z0-9]).{6,}$"
+                        [(ngModel)]="this._user.password" minlength="6">
                     <label for="psswrd" class="form-label">Password</label>
+                    <div *ngIf="passwordModel.touched && passwordModel.invalid" class="text-danger small warning">
+                        <div *ngIf="passwordModel.errors?.['required']">* Zorunludur.</div>
+                        <div *ngIf="passwordModel.errors?.['minlength']">* Şifre en az 6 karakter olmalı.</div>
+                        <div *ngIf="!(passwordModel.errors?.['minlength']) && passwordModel.errors?.['pattern']">
+                            * Büyük ve küçük harf, sayı ve özel karakterler içermeli.
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col btns"> <button type="button" class="btn btn-danger" (click)="onCancel()">İptal</button></div>
-                <div class="form-group col btns"> <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Kaydet</button></div>
+                <div class="form-group col btns"> <button type="button" class="btn btn-danger"
+                        (click)="onCancel()">İptal</button></div>
+                <div class="form-group col btns"> <button type="submit" class="btn btn-primary"
+                        [disabled]="registerForm.invalid">Kaydet</button></div>
             </div>
         </form>
     </div>
