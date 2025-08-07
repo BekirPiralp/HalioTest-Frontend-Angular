@@ -92,7 +92,7 @@ input::placeholder{
 }
 
 .wallper{
-    background-image: url('/assets/images/loginWallper.jpg');
+    background-image: url('/assets/images/loginWallper.webp');
     background-repeat: no-repeat;
     background-size: cover;
 }
