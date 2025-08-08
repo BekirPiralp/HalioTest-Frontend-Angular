@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'app-home-sidebar',
   imports: [],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css'
