@@ -1,0 +1,36 @@
+.btn{
+    width: 120px;
+    height: 40px;
+    
+    letter-spacing: 3px;
+    font-weight: 800;
+
+}
+
+.name{
+    font-weight:bolder;
+    
+    text-transform: capitalize;
+    text-shadow: 2px 2px 3px grey;
+    
+    letter-spacing: 0.5rem;
+    margin-bottom: 0px;
+
+    user-select: none;
+}
+
+.email{
+    color: gray;
+    font-style: italic;
+    font-weight: 400;
+    text-shadow: 1px 1px 3px grey;
+    margin-bottom: 0px;
+
+    user-select: none;
+}
+
+hr{
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+}
