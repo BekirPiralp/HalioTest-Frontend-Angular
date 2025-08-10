@@ -1,1 +1,16 @@
-<p>case-filter works!</p>
+<div class="d-flex flex-column align-items-center">
+    <div class="d-flex w-100 flex-row justify-content-between">
+        <div class="btn-group">
+            <div class="btn">button 1</div>
+            <div class="btn">button 2</div>
+            <div class="btn">button 3</div>
+            <div class="btn">button 4</div>
+            <div class="btn">button 5</div>
+        </div>     
+        <button class="btn"> btn</button>
+    </div>
+    <div class="filter">
+        <input class="" [(ngModel)]="_selectedKey" (ngModelChange)="filterValueChange()" list="filterList" name="filterCombo" id="filterCombo" placeholder="@name:">
+        <datalist id="filterList" for="filterCombo" class="filterList"><option class="filterListItem" *ngFor="let item of _filterList"  value="{{item.key}}">{{item.key}}</option></datalist>
+    </div>
+</div>
