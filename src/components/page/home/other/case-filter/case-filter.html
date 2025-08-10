@@ -10,7 +10,7 @@
         <button class="btn"> btn</button>
     </div>
     <div class="filter">
-        <input class="" [(ngModel)]="_selectedKey" (ngModelChange)="filterValueChange()" list="filterList" name="filterCombo" id="filterCombo" placeholder="@name:">
+        <input class="" [(ngModel)]="_selectedKey" (ngModelChange)="filterValueChange()" (keyup.enter)="onFilterEnter()" list="filterList" name="filterCombo" id="filterCombo" placeholder="@name:">
         <datalist id="filterList" for="filterCombo" class="filterList"><option class="filterListItem" *ngFor="let item of _filterList"  value="{{item.key}}">{{item.key}}</option></datalist>
     </div>
 </div>
