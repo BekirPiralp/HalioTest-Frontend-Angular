@@ -25,17 +25,19 @@ export class CaseFilter {
           console.log(a)
           console.log(a?.toString());
           console.log("bitti");
-        }
-      }
-    ),
-    new FilterModel(
-      {
-        key:"@case-name:asd",
-        func:(a)=>{
-          console.log("function içi:")
-          console.log(a)
-          console.log(a?.toString());
-          console.log("bitti");
+          if(!this._filterList.find(p=>p.key==="@case-name:asd"))
+          this._filterList.push(...[
+            new FilterModel(
+                {
+                  key:"@case-name:asd",
+                  func:(a)=>{
+                    console.log("function içi:")
+                    console.log(a)
+                    console.log(a?.value);
+                    console.log("bitti");
+                  }
+                })
+          ]);
         }
       }
     ),
@@ -51,6 +53,12 @@ export class CaseFilter {
     }),
     new FilterModel({
       key:"@asigned-user:"
+    }),
+    new FilterModel({
+      key:"",
+      func:()=>{
+        this._filterList = this._filterListDefault
+      }
     })
   ]
   _filterList = [...this._filterListDefault];
@@ -63,6 +71,10 @@ export class CaseFilter {
       if(selectedValue.func){
         selectedValue.func(selectedValue);
       }
+    }else{
+      console.log("girdi")
+      this._filterList.length=0
+      this._filterList.push(...this._filterListDefault);
     }
   }
 }
@@ -79,22 +91,18 @@ class FilterModel {
       this.func = params.func;
     }
   }
+  isdefault:boolean |undefined;
   key: string | undefined;
   data: object | undefined;
   func: ((filterModel?: FilterModel) => void) | undefined;
   protected filterModel = this;
 
-  toString():string|undefined{
-    if(this.key){
-      
-      let matchResult = this.key.match("@[^:]+:\s*(?<value>.*)");
-      if(matchResult){
-        console.log(matchResult)
-        console.log(matchResult.groups?.['value']);
-        return "match";
-      }
-    }
-    return undefined;
+  get value():string|undefined{
+   return this.key?.match("@[^:]+:\s*(?<value>.*)")?.groups?.['value'] || undefined;
+  }
+
+  toString():string{
+    return this.key ||""
   }
 }
 
