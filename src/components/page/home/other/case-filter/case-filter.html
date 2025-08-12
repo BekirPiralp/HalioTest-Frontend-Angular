@@ -9,8 +9,7 @@
         </div>     
         <button class="btn"> btn</button>
     </div>
-    <div class="filter">
-        <input class="" [(ngModel)]="_selectedKey" (ngModelChange)="filterValueChange()" (keyup.enter)="onFilterEnter()" list="filterList" name="filterCombo" id="filterCombo" placeholder="@name:">
-        <datalist id="filterList" for="filterCombo" class="filterList"><option class="filterListItem" *ngFor="let item of _filterList"  value="{{item.key}}">{{item.key}}</option></datalist>
+    <div class="filter mb-4">
+        <app-tool-combo-box [(filterList)]="_filterList"></app-tool-combo-box>
     </div>
 </div>
