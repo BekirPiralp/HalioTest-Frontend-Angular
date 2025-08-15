@@ -42,5 +42,9 @@ export abstract class BaseUrl {
     public   _getCountByFilter():string {
         return `${AppUrl.BaseUrl}/api/${this.modelName}/GetCountByFilter`;
     }
+
+    public  _getByFilterByOrderByRemoved():string{
+        return `${AppUrl.BaseUrl}/api/${this.modelName}/GetByFilterByOrderByRemoved`;
+    }
     //#endregion
 }

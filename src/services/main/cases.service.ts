@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { BaseService } from './base/base.service';
 import { CasesModel } from '../../models/concrete/entity-models/cases.model';
 import { CasesUrl } from '../url/entity-models-url/cases.url';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,5 +13,18 @@ export class CasesService extends BaseService<CasesModel,CasesUrl>{
   constructor(http:HttpClient) {
     super(http,new CasesUrl());
     
+  }
+
+  getBySearchtoDescription(searchKey:string){
+    const params = new HttpParams().set("searchKey",searchKey)
+    .set("orderField","id").set("desc","false");
+    
+    return this._http.post<CasesModel[]>(this._url._getByFilterByOrderByRemoved(),
+    ["finishDate","id","startDate","name","openedUserId","openedUser"],{params:params}).pipe(
+      catchError((error:Error)=>{
+        console.error(`[${this.constructor.name}]: ${error.message}`);
+        return throwError(()=>error);
+      })
+    )
   }
 }
