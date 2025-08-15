@@ -20,12 +20,21 @@ export class ComboBox {
   @Input() filterList?:IFilterModel[];
   @Output() filterListChange = new EventEmitter<IFilterModel[]|undefined>();
   @Output() selectedValueChange = new EventEmitter<IFilterModel|undefined>();
+  @Input() requiredSecondaryProcess?:boolean = false;
 
   @Input()  set selectedKey(val:string|undefined){
     this._selectedKey = val;
+    
     setTimeout(()=>{
       this.filterHandle();
+      
+      if(this.requiredSecondaryProcess){
+        setTimeout(()=>{
+          this.filterHandle();
+        })
+    }
     })
+    
   }
   @Output() selectedKeyChange = new EventEmitter<string|undefined>();
 
