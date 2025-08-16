@@ -43,10 +43,12 @@ export class ComboBox {
 
 
   
-
+  private _formDatalist = false;
 
   filterValueChange() {
     this.selectedKeyChange.emit(this._selectedKey);
+
+    this._formDatalist = true;
 
     this.filterHandle();
   }
@@ -69,7 +71,10 @@ export class ComboBox {
 
 
   onFilterEnter() {
-    this.filterHandle(); //kopyalanan değere göre veri geldi ve liste de ise ikincil tekrar kontrol
+    if(this._formDatalist)
+      this._formDatalist = false; 
+    else
+      this.filterHandle(); //kopyalanan değere göre veri geldi ve liste de ise ikincil tekrar kontrol
   }
 
 
