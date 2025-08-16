@@ -17,7 +17,7 @@ export class CasesService extends BaseService<CasesModel,CasesUrl>{
 
   getBySearchtoDescription(searchKey:string){
     const params = new HttpParams().set("searchKey",searchKey)
-    .set("orderField","id").set("desc","false");
+    .set("orderField","id").set("desc",false);
     
     return this._http.post<CasesModel[]>(this._url._getByFilterByOrderByRemoved(),
     ["finishDate","id","startDate","name","openedUserId","openedUser"],{params:params}).pipe(
