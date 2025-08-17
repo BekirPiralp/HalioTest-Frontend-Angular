@@ -35,6 +35,10 @@ export abstract class BaseUrl {
         return `${AppUrl.BaseUrl}/api/${this.modelName}/GetAll`;
     }
 
+    public   _getAllDesc():string {
+        return `${AppUrl.BaseUrl}/api/${this.modelName}/GetAllDesc`;
+    }
+
     public   _getCount():string {
         return `${AppUrl.BaseUrl}/api/${this.modelName}/GetCount`;
     }

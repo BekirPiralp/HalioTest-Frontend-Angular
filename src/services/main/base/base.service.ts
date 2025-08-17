@@ -64,5 +64,16 @@ export abstract class BaseService<TModel extends BaseModelInterface, TUrl extend
       );
     }
 
+    getAllDesc():Observable<TModel[]>{
+      return this._http.get<TModel[]>(
+        this._url._getAllDesc()
+      ).pipe(
+        catchError(error=>{
+          console.error(`[${this.constructor.name}]:${error.message}`);
+          return throwError(()=>error);
+        })
+      );
+    }
+
   //#endregion
 }
