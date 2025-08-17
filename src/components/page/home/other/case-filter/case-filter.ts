@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Params } from '../../../../tools/combo-box/models/abstract/params';
 import { FilterModel } from '../../../../tools/combo-box/models/concrete/filter-model';
@@ -10,6 +10,11 @@ import { CaseStatus } from '../../../../../models/concrete/other/case-status';
 import { AssignedCaseService } from '../../../../../services/main/assigned-case.service';
 import { UsersService } from '../../../../../services/main/users.service';
 import { UsersModel } from '../../../../../models/concrete/entity-models/users.model';
+import { CasesModel } from '../../../../../models/concrete/entity-models/cases.model';
+import { CaseStatusModel } from '../../../../../models/concrete/entity-models/case-status.model';
+import { EMPTY, forkJoin, Observable, of, tap } from 'rxjs';
+import { EMPTY_OBSERVER } from 'rxjs/internal/Subscriber';
+import { AssignedCaseModel } from '../../../../../models/concrete/entity-models/assigned-case.model';
 
 @Component({
   selector: 'app-home-case-filter',
@@ -25,6 +30,11 @@ export class CaseFilter {
   ) {
     
   }
+
+  @Output() listCaseChange = new EventEmitter<CasesModel[]|undefined>();
+
+  private _listCase:CasesModel[]|undefined;
+
   _filterList: Array<FilterModel> = [
     /*"@case-name:",
     "@case-description:",
@@ -42,8 +52,21 @@ export class CaseFilter {
                 this._filterList.push(new FilterModel({
                   key:`@case-name:${item.name}`,
                   data: item,
-                  func(filterModel) {
-                    // case işlem; ve case list güncellencek
+                  func:(filterModel)=>{
+                    //case name e göre arama yapılacak
+                    if(filterModel?.value)
+                      this._caseService.getByName(filterModel?.value).subscribe((response)=>{
+                          //case işlem; ve case list güncellencek
+                          
+                          if(response && response.length > 0)
+                            this._listCase=response;
+                          
+                          else
+                            this._listCase=undefined;
+
+                          this.listCaseChange.emit(this._listCase);
+                        }
+                      )
                   },
                 }))
               })
@@ -59,8 +82,15 @@ export class CaseFilter {
         func:(filterModel)=>{
           let searchKey = filterModel?.value;
           if(searchKey?.trim()){
-            this._caseService.getBySearchtoDescription(searchKey).subscribe(reponse=>{
+            this._caseService.getBySearchtoDescription(searchKey).subscribe(response=>{
               //case list güncellenecek
+              if(response && response.length > 0)
+                this._listCase=response;
+              
+              else
+                this._listCase=undefined;
+
+              this.listCaseChange.emit(this._listCase);
             })
           }
         },
@@ -79,11 +109,51 @@ export class CaseFilter {
               this._filterList.push(new FilterModel({
                 key:`${filterModel?.key}${CaseStatus[item as number]}`,
                 func:(itemModel)=>{
-                  this._caseStatusService.getAll().subscribe(reponse=>{
-                    //ilk olarak date göre ters sıralı ve case göre gruplu halde getir
-                    //listeyi for ile dön ve aynı case idli ilk itemı yeni listeye al
-                    //yeni listeye göre case listi oluştur ve yolla
-                  })  
+                  //ilk olarak date göre ters sıralı halde getir
+                  this._caseStatusService.getOrderedDateDesc().subscribe(response=>{
+                    //Liste yok yada boş ise çık
+                    if(!response || response.length<=0){
+                      this._listCase = undefined;
+                      this.listCaseChange.emit(this._listCase);
+                    }
+                      
+                    //listeyi for ile dön ve farklı case id li ilk itemı al
+                    const uniqStatusModelMap = new Map<number,CaseStatusModel>();
+                    response.forEach((itemStatus)=>{
+                      if(!uniqStatusModelMap.has(itemStatus.caseId))
+                        uniqStatusModelMap.set(itemStatus.caseId,itemStatus);
+                      }
+                    );
+                    
+                    //CaseSutasu number ı eşit olanı filtrele
+                    var newList = Array.from(uniqStatusModelMap.values()).filter(p=>p.status === item as number);
+
+                    //case nesnesi olamayanın nesnesini al
+                    let observables = newList?.filter(s=>!s.cases && s.caseId && s.caseId>0)
+                    .map(s=> this._caseService.getById(s.caseId).pipe(
+                        tap((c)=>{
+                          if(c)
+                            s.cases=c;
+                        })
+                      )
+                    )
+
+                    //observable yok ise de tetikelensin diye of(undifined) => bu tüm caseler zaten gelmiş demek
+                    const safeObservables = (observables && observables.length>0?observables:[of(undefined as unknown as CasesModel)]);
+
+                    forkJoin(safeObservables).subscribe(()=>{
+                      //yeni listeye göre case listi oluştur 
+                      
+                      let responseList:CasesModel[]|undefined = newList
+                      .map(p=>p.cases)
+                      .filter((c):c is CasesModel => !!c) || undefined; //!!c eşittir !c != true , !c ise boş olmadurumu , direk c verince liste (casesmodel|undefine)[]|undifined şekline dönüyor // runtimeda sıkıntı yok ama
+                      
+                      this._listCase = responseList;
+
+                      this.listCaseChange.emit(this._listCase);
+                    })
+                      
+                  })
                 },
               }));
               
@@ -127,7 +197,34 @@ export class CaseFilter {
                     //user a ait listeyi getir
                     this._assignedCaseService.getByUserId(user.id).subscribe(
                       (responseAssigned)=>{
-                        //caseleri listeye al
+                        //liste boş ise
+                        if(!responseAssigned || responseAssigned.length <=0){
+                          this._listCase = undefined;
+                          this.listCaseChange.emit(this._listCase);
+                        }
+
+                        //caselerin varlığı yok ise 
+                        const observables=responseAssigned.filter(s=>!s.cases && s.caseId && s.caseId>0)
+                         .map(
+                          (a)=>this._caseService.getById(a.caseId).pipe(
+                            tap(
+                              (c)=>a.cases=c
+                            )
+                          )
+                        )
+
+                        //observarebles tip güvenliği
+                        const safeObservables = (observables?observables:[of(undefined as unknown as CasesModel)]);
+
+                        //fork ile işleme
+                        forkJoin(safeObservables).subscribe(()=>{
+                          //listeyi oluşturma
+                          const list = responseAssigned.map(a=>a.cases).filter((c):c is CasesModel => !!c) || undefined;
+
+                          //listeyi gönderme
+                          this._listCase = list;
+                          this.listCaseChange.emit(this._listCase);
+                        })
                       }
                     )
                   }
