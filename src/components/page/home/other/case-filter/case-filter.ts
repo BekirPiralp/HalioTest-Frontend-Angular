@@ -213,7 +213,7 @@ export class CaseFilter {
                         )
 
                         //observarebles tip güvenliği
-                        const safeObservables = (observables?observables:[of(undefined as unknown as CasesModel)]);
+                        const safeObservables = (observables && observables.length > 0 ?observables:[of(undefined as unknown as CasesModel)]);
 
                         //fork ile işleme
                         forkJoin(safeObservables).subscribe(()=>{
