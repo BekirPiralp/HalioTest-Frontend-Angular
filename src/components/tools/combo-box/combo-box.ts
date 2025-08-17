@@ -59,6 +59,9 @@ export class ComboBox {
     if(!_selectedValue) // for text copy paste
       _selectedValue = this.filterList?.find(p=> p.key &&this._selectedKey?.startsWith(p.key))
     
+    if(_selectedValue)
+      _selectedValue.selectingKey = this._selectedKey;
+    
     this.selectedValueChange.emit(_selectedValue);
     
     if(_selectedValue){
