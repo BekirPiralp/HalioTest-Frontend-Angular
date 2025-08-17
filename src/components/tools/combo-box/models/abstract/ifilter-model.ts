@@ -14,5 +14,7 @@ export interface IFilterModel {
      */
     get value():string|undefined;
 
+    set selectingKey (val:string | undefined);
+
     toString():string;
 }

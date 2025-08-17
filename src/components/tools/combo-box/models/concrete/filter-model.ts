@@ -27,7 +27,7 @@ export class FilterModel implements IFilterModel {
 
   private _selectingKey?: string;
 
-  set SelectingKey (val:string | undefined){
+  set selectingKey (val:string | undefined){
     this._selectingKey = val;
   }
 
