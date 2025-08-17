@@ -39,6 +39,16 @@ export class CaseFilter {
     "@status:",
     "@status-description:",
     "@asigned-user:",*/
+    new FilterModel({
+      key:"",
+      isDefault: true,
+      func:(_):void=>{
+        this._caseService.getAllDesc().subscribe(response=>{
+          this._listCase=response && response.length > 0? response : undefined;
+          this.listCaseChange.emit(this._listCase);
+        })
+      }
+    }),
     new FilterModel(
       {
         key:"@case-name:",
@@ -113,6 +123,7 @@ export class CaseFilter {
                     if(!response || response.length<=0){
                       this._listCase = undefined;
                       this.listCaseChange.emit(this._listCase);
+                      return;
                     }
                       
                     //listeyi for ile dön ve farklı case id li ilk itemı al
@@ -166,8 +177,26 @@ export class CaseFilter {
       func:(filterModel)=>{
         if(filterModel?.value){
           this._caseStatusService.getBySearchtoDescription(filterModel?.value).subscribe((response)=>{
-            //gelenlere göre case list oluştur;
+            if(!response || response.length<=0){
+              this._listCase = undefined;
+              this.listCaseChange.emit(this._listCase);
+              return;
+            }
+            
             //aynı case 1 defa listede olsun
+            const uniqCaseStatusMap = new Map<number,CaseStatusModel>();
+            
+            response.forEach((s)=>{
+              if(!uniqCaseStatusMap.has(s.caseId))
+                uniqCaseStatusMap.set(s.caseId,s);
+            })
+            
+            
+            //gelenlere göre case list oluştur;
+            const list= Array.from(uniqCaseStatusMap.values()).map(s=>s.cases).filter((c):c is CasesModel=>!!c) || undefined;
+
+            this._listCase = list;
+            this.listCaseChange.emit(this._listCase);
           })
           
         }
