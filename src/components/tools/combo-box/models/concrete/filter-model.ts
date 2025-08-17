@@ -11,6 +11,7 @@ export class FilterModel implements IFilterModel {
       this.data = params.data;
       this.func = params.func;
       this.isDefault = params.isDefault;
+      this.isUseSelectingKey = params.isUseSelectingKey;
     }
 
     this._filterModel=this;
@@ -22,13 +23,23 @@ export class FilterModel implements IFilterModel {
   key: string | undefined;
   data: object | undefined;
   func: ((filterModel?: IFilterModel) => void) | undefined;
+  isUseSelectingKey: boolean | undefined; 
+
+  private _selectingKey?: string;
+
+  set SelectingKey (val:string | undefined){
+    this._selectingKey = val;
+  }
 
   get filterModel():IFilterModel{
     return this._filterModel;
   }
 
   get value():string|undefined{
-   return this.key?.match("@[^:]+:\s*(?<value>.*)")?.groups?.['value'] || undefined;
+    if(this.isUseSelectingKey)
+      return this._selectingKey?.match("@[^:]+:\s*(?<value>.*)")?.groups?.['value'] || undefined;
+    
+    return this.key?.match("@[^:]+:\s*(?<value>.*)")?.groups?.['value'] || undefined;
   }
 
   toString():string{
