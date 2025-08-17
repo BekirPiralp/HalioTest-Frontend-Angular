@@ -12,9 +12,7 @@ import { UsersService } from '../../../../../services/main/users.service';
 import { UsersModel } from '../../../../../models/concrete/entity-models/users.model';
 import { CasesModel } from '../../../../../models/concrete/entity-models/cases.model';
 import { CaseStatusModel } from '../../../../../models/concrete/entity-models/case-status.model';
-import { EMPTY, forkJoin, Observable, of, tap } from 'rxjs';
-import { EMPTY_OBSERVER } from 'rxjs/internal/Subscriber';
-import { AssignedCaseModel } from '../../../../../models/concrete/entity-models/assigned-case.model';
+import { forkJoin, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-home-case-filter',
