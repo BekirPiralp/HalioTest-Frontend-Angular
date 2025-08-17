@@ -201,6 +201,7 @@ export class CaseFilter {
                         if(!responseAssigned || responseAssigned.length <=0){
                           this._listCase = undefined;
                           this.listCaseChange.emit(this._listCase);
+                          return;
                         }
 
                         //caselerin varlığı yok ise 
