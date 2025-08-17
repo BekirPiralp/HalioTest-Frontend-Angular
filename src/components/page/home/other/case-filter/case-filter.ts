@@ -87,6 +87,7 @@ export class CaseFilter {
       <Params>{
         key:"@case-description:",
         isDefault: true,
+        isUseSelectingKey: true,
         func:(filterModel)=>{
           let searchKey = filterModel?.value;
           if(searchKey?.trim()){
@@ -174,6 +175,7 @@ export class CaseFilter {
     new FilterModel({
       key:"@status-description:",
       isDefault: true,
+      isUseSelectingKey: true,
       func:(filterModel)=>{
         if(filterModel?.value){
           this._caseStatusService.getBySearchtoDescription(filterModel?.value).subscribe((response)=>{
