@@ -46,5 +46,9 @@ export abstract class BaseUrl {
     public  _getByFilterByOrderByRemoved():string{
         return `${AppUrl.BaseUrl}/api/${this.modelName}/GetByFilterByOrderByRemoved`;
     }
+
+    public _getByOrder():string{
+        return `${AppUrl.BaseUrl}/api/${this.modelName}/GetByOrder`;
+    }
     //#endregion
 }
