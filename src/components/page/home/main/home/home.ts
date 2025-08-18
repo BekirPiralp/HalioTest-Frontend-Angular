@@ -4,6 +4,7 @@ import { Sidebar } from "../../other/sidebar/sidebar";
 import { CaseFilter } from "../../other/case-filter/case-filter";
 import { CaseList } from "../../other/case-list/case-list";
 import { CommonModule } from '@angular/common';
+import { CasesModel } from '../../../../../models/concrete/entity-models/cases.model';
 
 @Component({
   selector: 'app-home',
@@ -12,4 +13,5 @@ import { CommonModule } from '@angular/common';
   styleUrl: './home.css'
 })
 export class Home {
+  public listCases:CasesModel[]|undefined;
 }
