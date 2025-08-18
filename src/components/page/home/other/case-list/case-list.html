@@ -1,1 +1,7 @@
-<p>case-list works!</p>
+<div class="list-case">
+    @if(_listCase){
+        @for (item of _listCase; track $index) {
+            <app-tool-case-card class="case-card"  ></app-tool-case-card>
+        }
+    }
+</div>
