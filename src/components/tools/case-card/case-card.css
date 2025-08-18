@@ -1,0 +1,73 @@
+.card{
+    font-size:smaller;
+
+    line-height: 2.2em;
+
+    position: relative;
+
+    border: none;
+}
+
+.card:hover{
+    cursor:default;
+}
+
+.title i{
+    color: gray;
+}
+
+.body{
+    
+}
+
+.body p{
+    text-align: justify;
+}
+
+.lessDetail{
+
+    display:-webkit-box;
+    
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+
+    overflow: hidden;
+}
+
+.more{
+    background: linear-gradient(transparent,gray) !important;
+}
+
+.less{
+    background: linear-gradient(transparent,pink) !important;
+}
+
+.more , .less{
+    position: absolute;
+    display: none;
+
+    border: none;
+
+    width: 100%;
+    bottom: 0px;
+
+    font-weight: bold;
+    text-transform: capitalize;
+
+    letter-spacing: 2px;
+
+    text-shadow: 1px 1px 3px  black;
+}
+
+.card:hover .more , .card:hover .less{
+    display: block;
+}
+
+.assignedDescription{
+    text-align: left;
+}
+
+.statusDetails{
+    font-size: small;
+}

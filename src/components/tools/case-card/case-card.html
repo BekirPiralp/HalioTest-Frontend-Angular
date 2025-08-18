@@ -1,0 +1,104 @@
+<div class="mx-auto card d-flex  flex-row justify-content-center text-center">
+    <!-- case title and body -->
+    <div class="d-flex flex-column col-9">
+        <!-- title -->
+        <div class="d-flex flex-row pt-4 px-4 title">
+            @if(_case){
+            <h4 class="me-4">{{_case.name}}</h4>
+            <i class="pt-1">{{_case.startDate}} - {{_case.finishDate}}</i>
+            }
+            @else {
+            <h4 class="me-4">Case Name</h4>
+            <i class="pt-1">start time - end time</i>
+            }
+        </div>
+        <hr class="mx-3" style="border: 1px solid; border-radius: 10px;">
+        <!-- body -->
+        <div class="body px-4">
+            @if(_more){
+            <div class="statusDetails">
+                <ul>
+                    @if(_case && _caseStatuses){
+                    @for (itemStatus of _caseStatuses; track itemStatus.id ) {
+                    <li class="text-start lh-sm">
+                        <span><b>{{itemStatus.date.toLocaleDateString()}}</b> tarihinde
+                            <b>{{getStatusText(itemStatus.status)}}</b> edildi.</span>
+                        @if (itemStatus.statusDescription) {
+                        <p class="ms-4 text-muted fst-italic text-capitalize lh-sm">
+                            {{itemStatus.statusDescription}}
+                        </p>
+                        }
+                    </li>
+
+                    }
+                    }@else {
+                    <li class="text-start lh-sm">
+                        <span><b>Date</b> tarihinde <b>Status Text</b> edildi.</span>
+                        <p class="ms-4 text-muted fst-italic text-capitalize lh-sm">
+                            Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                            eiusmod tempor incididunt ut labore et dolore magna aliqua. eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua.
+                        </p>
+                    </li>
+                    }
+                </ul>
+            </div>
+            <hr>
+            <div class="assignedDescription">
+                <h6>Görevlendirme Açıklaması:</h6>
+                @if(_assgnedCase && _case){
+                    @if(_assgnedCase.description){
+                    <p class="mb-4 ">_assgnedCase.description</p>
+                    }@else {
+                    <p class="mb-4 text-muted">Görev açıklaması yoktur.</p>
+                    }
+                }@else{
+                    <p class="mb-4 ">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.</p>
+                }
+            </div>
+            <hr>
+            <h6 class="text-start">Açıklama:</h6>
+            <p class="mb-4">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur
+                adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor
+                sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.</p>
+            }
+            @else {
+            <p class="mb-4 lessDetail">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing
+                elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet,
+                consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem
+                ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            }
+        </div>
+    </div>
+    <!-- case status and users details -->
+    <div class="d-flex col-3 flex-column">
+        <!-- case statusu görünecek -->
+        <button type="button" class="btn btn-outline-primary m-4">
+            @if(_caseStatuses){<span>{{getStatusTextNow}}</span>}@else{CaseStatus}</button>
+        <div class="text-start ps-4">
+            <p style="text-overflow: clip;"> Open by <span
+                    class="text-capitalize">@if(_case){<b>{{_case.openedUser?.name}}-{{_case.openedUser?.surName}}</b>}@else{<b>Opened
+                        User</b>}</span></p>
+            <!-- Assigned değilse boş olacak -->
+            <p style="text-overflow: clip;"> Assigned to <span class="text-capitalize">@if (_assgnedCase)
+                    {<b>{{_assgnedCase.user?.name}}-{{_assgnedCase.user?.surName}}</b>}@else if (!_case) {<b>Assigned
+                        User</b>}</span></p>
+        </div>
+        <!-- assigned değilse gözükecek -->
+        @if(!_assgnedCase){
+        <button type="button" class="btn btn-outline-danger mx-4 mb-4"> Assigned</button>
+        }
+    </div>
+    @if(!_more){
+    <button class="btn btn-secondary more" (click)="moreClick()"> daha fazla</button>
+    }@else{
+    <button class="btn btn-secondary less" (click)="lessClick()"> daha az</button>
+    }
+</div>
