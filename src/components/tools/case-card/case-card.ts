@@ -26,43 +26,7 @@ export class CaseCard {
   protected _more = false;
   protected _case: CasesModel | undefined;
   protected _assgnedCase : AssignedCaseModel |undefined;
-  protected _caseStatuses: CaseStatusModel[] | undefined = [
-    new CaseStatusModel(
-      1,
-      101,
-      new Date("2025-08-01"),
-      1, // status
-      "Lorem ipsum dolor sit amet."
-    ),
-    new CaseStatusModel(
-      2,
-      101,
-      new Date("2025-08-05"),
-      2, // status
-      "" // açıklama yok
-    ),
-    new CaseStatusModel(
-      3,
-      102,
-      new Date("2025-08-07"),
-      3, // status
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat, nisl id sagittis rhoncus, justo neque aliquam nisl, in porttitor risus odio a nunc. Nulla facilisi. Suspendisse potenti."
-    ),
-    new CaseStatusModel(
-      4,
-      103,
-      new Date("2025-08-10"),
-      4, // status
-      "" // açıklama yok
-    ),
-    new CaseStatusModel(
-      5,
-      104,
-      new Date("2025-08-15"),
-      1, // status (tekrar olabilir)
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum auctor, felis eget tincidunt sodales, turpis sapien cursus lacus, a blandit nisi justo nec libero. Nam vel mauris in arcu porttitor imperdiet at et turpis. Aliquam erat volutpat. Cras interdum, neque sit amet ultrices tempus, risus erat luctus arcu, vel luctus magna elit nec erat. Sed ut diam eget nibh facilisis malesuada."
-    ),
-  ];
+  protected _caseStatuses: CaseStatusModel[] | undefined;
   
 
   moreClick() {
