@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 })
 export class CaseList {
 
-  @Input() listCase:CasesModel[]|undefined = Array<CasesModel>(10); //[new CasesModel(1,"testCase","test desc",new Date(),new Date(),1,undefined)];
+  @Input() set listCase(val:CasesModel[]|undefined) {
+    this._listCase = val;
+  }
   protected _listCase:CasesModel[]|undefined = Array<CasesModel>(100);;
 }
