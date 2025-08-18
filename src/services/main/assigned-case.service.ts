@@ -25,4 +25,17 @@ export class AssignedCaseService extends BaseService<AssignedCaseModel,AssignedC
       })
     )
   }
+
+  getByCaseId(id:number):Observable<AssignedCaseModel[]>{
+    const params = new HttpParams().set("searchKey",`${id}`)
+    .set("orderField","id").set("desc",false);
+    
+    return this._http.post<AssignedCaseModel[]>(this._url._getByFilterByOrderByRemoved(),
+    ["cases","description","id","user","userId"],{params:params}).pipe(
+      catchError((error:Error)=>{
+        console.error(`[${this.constructor.name}]: ${error.message}`);
+        return throwError(()=>error);
+      })
+    )
+  }
 }
