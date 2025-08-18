@@ -38,4 +38,17 @@ export class CaseStatusService extends BaseService<CaseStatusModel,CaseStatusUrl
       })
     )
   }
+
+  getByCaseIdOrderedDateDesc(caseId:number){
+    const params = new HttpParams().set("searchKey",caseId)
+    .set("orderField","date").set("desc",true);
+    
+    return this._http.post<CaseStatusModel[]>(this._url._getByFilterByOrderByRemoved(),
+    ["cases","statusDescription","date","status","id"],{params:params}).pipe(
+      catchError((error:Error)=>{
+        console.error(`[${this.constructor.name}]: ${error.message}`);
+        return throwError(()=>error);
+      })
+    )
+  }
 }
