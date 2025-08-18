@@ -1,10 +1,10 @@
-<div class=" d-flex vh-100 wh-100 align-items-center flex-column">
-    <app-home-navbar class=" w-100"></app-home-navbar>
-    <div class="d-flex flex-row w-100 h-100">
-        <app-home-sidebar class=" d-flex flex-column justify-content-center border border-success"></app-home-sidebar>
-        <div class="d-flex flex-column w-100 border border-danger">
-            <app-home-case-filter class="border border-success"></app-home-case-filter>
-            <app-home-case-list class=" h-100 border border-danger bg-primary"></app-home-case-list>
+<div class=" d-flex vh-100 vw-100 align-items-center flex-column bg-secondary ">
+    <app-home-navbar class=" w-100 navbar bg-light bg-white"></app-home-navbar>
+    <div class="d-flex flex-row w-100 vh-100 content">
+        <app-home-sidebar class=" d-flex flex-column justify-content-center"></app-home-sidebar>
+        <div class="d-flex flex-column w-100 container " >
+            <app-home-case-filter class=" filter" (listCaseChange)="listCases"></app-home-case-filter>
+            <app-home-case-list class="w-100 list py-4 px-4" [listCase]="listCases"></app-home-case-list>
         </div>
     </div>
 </div>
