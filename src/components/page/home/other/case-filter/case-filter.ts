@@ -60,7 +60,11 @@ export class CaseFilter {
           this._caseService.getAll().subscribe(response=>{
             if(response?.length>0){
               response.forEach((item)=>{
-                if(!this._filterList.some(p=>(p.data as CasesModel).id === item.id)){
+                let kntrlList= this._filterList.filter(p=>p.data).map(f=>{
+                  return f.data as CasesModel;
+                });
+                
+                if(!(kntrlList.some(p=>p.id == item.id))){
                   this._filterList.push(new FilterModel({
                     key:`@case-name:${item.name}`,
                     data: item,
