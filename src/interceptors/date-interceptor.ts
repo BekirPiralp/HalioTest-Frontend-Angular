@@ -4,7 +4,7 @@ import { map } from 'rxjs';
 export const dateInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(map(event=>{
     if(event instanceof HttpResponse){
-      return event.clone(dateConverter(event.body));
+      return event.clone({ body:dateConverter(event.body)});
     }
     return event;
   }));
