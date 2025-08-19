@@ -3,7 +3,7 @@
     <div class="d-flex flex-row w-100 vh-100 content">
         <app-home-sidebar class=" d-flex flex-column justify-content-center"></app-home-sidebar>
         <div class="d-flex flex-column w-100 container " >
-            <app-home-case-filter class=" filter" (listCaseChange)="listCases"></app-home-case-filter>
+            <app-home-case-filter class=" filter" (listCaseChange)="listCases = $event"></app-home-case-filter>
             <app-home-case-list class="w-100 list" [listCase]="listCases"></app-home-case-list>
         </div>
     </div>
