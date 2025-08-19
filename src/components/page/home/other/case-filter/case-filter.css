@@ -1,0 +1,31 @@
+.filter-btns{
+    position: relative;
+    padding-top: 1rem;
+}
+
+.menuDisplay{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+
+    transform: translateY(100%);
+}
+
+.menuHidden{
+    transform: rotate(180deg);
+}
+
+.menuDisplay:hover img{
+    /* background-color: lightgreen; */
+    filter: drop-shadow(3px 3px 2px lightgreen) drop-shadow(0px -3px 5px lightgreen);
+}
+
+.menuHidden:hover{
+    /* background-color: lightpink; */
+
+    filter: drop-shadow(3px 3px 2px lightpink) drop-shadow(0px -3px 5px lightpink);
+}
+
+.menuDisplay, .menuHidden{
+    border: none;
+}

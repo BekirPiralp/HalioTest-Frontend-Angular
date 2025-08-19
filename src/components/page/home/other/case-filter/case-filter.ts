@@ -28,11 +28,14 @@ export class CaseFilter {
   ) {
     
   }
-
+  
   @Output() listCaseChange = new EventEmitter<CasesModel[]|undefined>();
-
+  
   private _listCase:CasesModel[]|undefined;
-
+  
+  protected menu: boolean = false;
+  
+  
   _filterList: Array<FilterModel> = [
     /*"@case-name:",
     "@case-description:",
@@ -266,5 +269,11 @@ export class CaseFilter {
     })
   ]
 
+  menuDisplay() {
+    this.menu = true;
+  }
+  menuHidden() {
+    this.menu = false;
+  }
 
 }
