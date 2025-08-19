@@ -1,7 +1,7 @@
 <div class="list-case px-4 py-4">
     @if(_listCase){
         @for (item of _listCase; track $index) {
-            <app-tool-case-card class="case-card"  ></app-tool-case-card>
+            <app-tool-case-card class="case-card" [case]="item" ></app-tool-case-card>
         }
     }
 </div>
