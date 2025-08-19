@@ -5,7 +5,7 @@
         <div class="d-flex flex-row pt-4 px-4 title">
             @if(_case){
             <h4 class="me-4">{{_case.name}}</h4>
-            <i class="pt-1">{{_case.startDate}} - {{_case.finishDate}}</i>
+            <i class="pt-1">{{_case.startDate.toLocaleDateString()}} - {{_case.finishDate.toLocaleDateString()}}</i>
             }
             @else {
             <h4 class="me-4">Case Name</h4>
@@ -18,10 +18,11 @@
             @if(_more){
             <div class="statusDetails">
                 <ul>
-                    @if(_case && _caseStatuses){
+                    @if(_case && _caseStatuses && _caseStatuses.length>0){
                     @for (itemStatus of _caseStatuses; track itemStatus.id ) {
                     <li class="text-start lh-sm">
-                        <span><b>{{itemStatus.date.toLocaleDateString()}}</b> tarihinde
+                        <span><b>{{itemStatus.date.toLocaleDateString()}}</b> tarihinde 
+                            <b>{{itemStatus.date.toLocaleTimeString()}}</b> saatinde
                             <b>{{getStatusText(itemStatus.status)}}</b> edildi.</span>
                         @if (itemStatus.statusDescription) {
                         <p class="ms-4 text-muted fst-italic text-capitalize lh-sm">
@@ -89,7 +90,7 @@
     <div class="d-flex col-3 flex-column">
         <!-- case statusu görünecek -->
         <button type="button" class="btn btn-outline-primary m-4">
-            @if(_caseStatuses){<span>{{getStatusTextNow}}</span>}@else{CaseStatus}</button>
+            @if(_caseStatuses){<span>{{getStatusTextNow?getStatusTextNow:"CaseStatus"}}</span>}@else{CaseStatus}</button>
         <div class="text-start ps-4">
             <p style="text-overflow: clip;"> Open by <span
                     class="text-capitalize">@if(_case){<b>{{_case.openedUser?.name}}-{{_case.openedUser?.surName}}</b>}@else{<b>Opened
