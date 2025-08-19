@@ -60,26 +60,28 @@ export class CaseFilter {
           this._caseService.getAll().subscribe(response=>{
             if(response?.length>0){
               response.forEach((item)=>{
-                this._filterList.push(new FilterModel({
-                  key:`@case-name:${item.name}`,
-                  data: item,
-                  func:(filterModel)=>{
-                    //case name e göre arama yapılacak
-                    if(filterModel?.value)
-                      this._caseService.getByName(filterModel?.value).subscribe((response)=>{
-                          //case işlem; ve case list güncellencek
-                          
-                          if(response && response.length > 0)
-                            this._listCase=response;
-                          
-                          else
-                            this._listCase=undefined;
+                if(!this._filterList.some(p=>(p.data as CasesModel).id === item.id)){
+                  this._filterList.push(new FilterModel({
+                    key:`@case-name:${item.name}`,
+                    data: item,
+                    func:(filterModel)=>{
+                      //case name e göre arama yapılacak
+                      if(filterModel?.value)
+                        this._caseService.getByName(filterModel?.value).subscribe((response)=>{
+                            //case işlem; ve case list güncellencek
+                            
+                            if(response && response.length > 0)
+                              this._listCase=response;
+                            
+                            else
+                              this._listCase=undefined;
 
-                          this.listCaseChange.emit(this._listCase);
-                        }
-                      )
-                  },
-                }))
+                            this.listCaseChange.emit(this._listCase);
+                          }
+                        )
+                    },
+                  }))
+                }
               })
             }
           })
