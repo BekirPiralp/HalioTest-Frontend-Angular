@@ -221,10 +221,11 @@ export class CaseFilter {
         //Users listesini getir
         this._usersService.getAll().subscribe((response)=>{
           if(response && response.length > 0){
+            let kntrlList= this._filterList.filter(p=>p.data).map(p=>p.data as UsersModel)
             //userları filter list e ekle 
             response.forEach((item)=>{
               //userların daha önce eklenmemiş olduğunu kanıtla
-              if(!this._filterList.some(p=>(p.data as UsersModel).id === item.id))
+              if(!kntrlList.some(p=>p.id === item.id))
                 //users filter liste ekemek için model oluşumu
                 this._filterList.push(new FilterModel({
                   key:`${filterModel?.key}${item.name}-${item.surName}`,
@@ -266,6 +267,47 @@ export class CaseFilter {
                         })
                       }
                     )
+                  }
+                }));
+            });
+          }
+        })
+      },
+    }),
+    new FilterModel({
+      key:"@opened-user:",
+      isDefault: true,
+      func:(filterModel)=>{
+        
+        //Users listesini getir
+        this._usersService.getAll().subscribe((response)=>{
+          if(response && response.length > 0){
+            let kntrlList= this._filterList.filter(p=>p.data).map(p=>p.data as UsersModel)
+            //userları filter list e ekle 
+            response.forEach((item)=>{
+              //userların daha önce eklenmemiş olduğunu kanıtla
+              if(!kntrlList.some(p=>p.id === item.id))
+                //users filter liste ekemek için model oluşumu
+                this._filterList.push(new FilterModel({
+                  key:`${filterModel?.key}${item.name}-${item.surName}`,
+                  data:item,
+                  func:(itemModel)=>{
+                    let user = <UsersModel>(itemModel?.data);
+
+                    //user a ait listeyi getir
+                    if(user)
+                      this._caseService.getByUserId(user.id).subscribe(result=>{
+                        if(result && result.length>0){
+                          this._listCase = result;
+                        }else
+                          this._listCase = undefined;
+                        this.listCaseChange.emit(this._listCase);
+                      })
+                    else{
+                      this._listCase = undefined;
+                    }
+
+                    this.listCaseChange.emit(this._listCase);
                   }
                 }));
             });
