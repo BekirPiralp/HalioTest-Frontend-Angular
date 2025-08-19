@@ -13,6 +13,7 @@ import { UsersModel } from '../../../../../models/concrete/entity-models/users.m
 import { CasesModel } from '../../../../../models/concrete/entity-models/cases.model';
 import { CaseStatusModel } from '../../../../../models/concrete/entity-models/case-status.model';
 import { forkJoin, of, tap } from 'rxjs';
+import { DefaultFilterKeys } from '../../../../../models/concrete/other/default-filter-keys';
 
 @Component({
   selector: 'app-home-case-filter',
@@ -43,7 +44,7 @@ export class CaseFilter {
     "@status-description:",
     "@asigned-user:",*/
     new FilterModel({
-      key:"",
+      key:DefaultFilterKeys.default,
       isDefault: true,
       func:(_):void=>{
         this._caseService.getAllDesc().subscribe(response=>{
@@ -54,7 +55,7 @@ export class CaseFilter {
     }),
     new FilterModel(
       {
-        key:"@case-name:",
+        key:DefaultFilterKeys.caseName,
         isDefault: true,
         func:(_fModel)=>{
           this._caseService.getAll().subscribe(response=>{
@@ -66,7 +67,7 @@ export class CaseFilter {
                 
                 if(!(kntrlList.some(p=>p.id == item.id))){
                   this._filterList.push(new FilterModel({
-                    key:`@case-name:${item.name}`,
+                    key:`${_fModel?.key}${item.name}`,
                     data: item,
                     func:(filterModel)=>{
                       //case name e göre arama yapılacak
@@ -94,7 +95,7 @@ export class CaseFilter {
     ),
     new FilterModel(
       <Params>{
-        key:"@case-description:",
+        key:DefaultFilterKeys.caseDescription,
         isDefault: true,
         isUseSelectingKey: true,
         func:(filterModel)=>{
@@ -114,7 +115,7 @@ export class CaseFilter {
         },
       }),
     new FilterModel({
-      key:"@status:",
+      key:DefaultFilterKeys.status,
       isDefault: true,
       func:(filterModel)=>{
         //enum a göre yeni sattusler ile vryant eklenecek
@@ -182,7 +183,7 @@ export class CaseFilter {
       },
     }),
     new FilterModel({
-      key:"@status-description:",
+      key:DefaultFilterKeys.statusDescription,
       isDefault: true,
       isUseSelectingKey: true,
       func:(filterModel)=>{
@@ -214,7 +215,7 @@ export class CaseFilter {
       }
     }),
     new FilterModel({
-      key:"@asigned-user:",
+      key:DefaultFilterKeys.asignedUser,
       isDefault: true,
       func:(filterModel)=>{
         
@@ -275,7 +276,7 @@ export class CaseFilter {
       },
     }),
     new FilterModel({
-      key:"@opened-user:",
+      key:DefaultFilterKeys.openedUser,
       isDefault: true,
       func:(filterModel)=>{
         
