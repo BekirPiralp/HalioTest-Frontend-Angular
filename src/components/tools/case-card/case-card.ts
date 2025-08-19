@@ -38,7 +38,7 @@ export class CaseCard {
   }
 
   getStatusText(status: number) {
-    return CaseStatus[status];
+    return status>0 && status<Array.from(Object.values(CaseStatus)).length ? CaseStatus[status]:"Case Status";
   }
 
   get getStatusNow(){
