@@ -220,7 +220,7 @@ export class CaseFilter {
             //userları filter list e ekle 
             response.forEach((item)=>{
               //userların daha önce eklenmemiş olduğunu kanıtla
-              if(!this._filterList.some(p=>p.value === `${item.name}-${item.surName}`))
+              if(!this._filterList.some(p=>(p.data as UsersModel).id === item.id))
                 //users filter liste ekemek için model oluşumu
                 this._filterList.push(new FilterModel({
                   key:`${filterModel?.key}${item.name}-${item.surName}`,
