@@ -40,4 +40,17 @@ export class CasesService extends BaseService<CasesModel,CasesUrl>{
       })
     )
   }
+
+  getByUserId(id:number){
+    const params = new HttpParams().set("searchKey",id)
+    .set("orderField","id").set("desc",false);
+    
+    return this._http.post<CasesModel[]>(this._url._getByFilterByOrderByRemoved(),
+    ["finishDate","id","startDate","name","openedUser","description"],{params:params}).pipe(
+      catchError((error:Error)=>{
+        console.error(`[${this.constructor.name}]: ${error.message}`);
+        return throwError(()=>error);
+      })
+    )
+  }
 }
