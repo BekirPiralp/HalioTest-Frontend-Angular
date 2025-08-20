@@ -6,6 +6,7 @@ import { CaseList } from "../../other/case-list/case-list";
 import { CommonModule } from '@angular/common';
 import { CasesModel } from '../../../../../models/concrete/entity-models/cases.model';
 import { CasesService } from '../../../../../services/main/cases.service';
+import { ListCaseService } from '../../other/case-filter/services/list-case.service';
 
 @Component({
   selector: 'app-home',
@@ -14,18 +15,30 @@ import { CasesService } from '../../../../../services/main/cases.service';
   styleUrl: './home.css'
 })
 export class Home {
-  constructor(private _casesService:CasesService) {
+  constructor(private _casesService:CasesService,private _listCaseService:ListCaseService) {
+    
     this._casesService.getAllDesc().subscribe((result)=>{
       this._listCases=result;
     })
+
+    this._listCaseService.listCase$ = this._listCases;
+
+    this.subscribeToListCases();
   }
+  
   
   private _listCases:CasesModel[]|undefined;
   public set listCases(val:CasesModel[]|undefined){
     this._listCases = val;
-    console.log(this._listCases)
   }
   public get listCases(){
     return this._listCases;
+  }
+
+
+  subscribeToListCases() {
+    this._listCaseService.listCase$.subscribe(result=>{
+      this._listCases=result;
+    })
   }
 }
