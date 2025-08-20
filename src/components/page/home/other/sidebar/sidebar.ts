@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { DefaultFilterKeys } from '../../../../../models/concrete/other/default-filter-keys';
 import { UsersModel } from '../../../../../models/concrete/entity-models/users.model';
+import { FilterService } from '../../../../tools/combo-box/services/filter.service';
 
 @Component({
   selector: 'app-home-sidebar',
@@ -10,7 +11,7 @@ import { UsersModel } from '../../../../../models/concrete/entity-models/users.m
 })
 export class Sidebar {
   
-  constructor(){
+  constructor(private filterSevice:FilterService){
     const storedUser = localStorage.getItem('user');
         
         if(storedUser)
@@ -19,20 +20,26 @@ export class Sidebar {
   
   protected fKeys=DefaultFilterKeys;
 
-  @Output() filterKey= new EventEmitter<string>();
-
   protected user:UsersModel|undefined;
 
   protected filterKeySet(arg0: DefaultFilterKeys) {
+    console.log("opeden to method name of filter key set")
+    console.log(this.user)
+    if(!this.user){
+      this.user = UsersModel.prototype
+      this.user.name="Christopher";
+      this.user.surName="Sanchez";
+    }
+
     switch(arg0){
       case DefaultFilterKeys.openedUser:
       case DefaultFilterKeys.asignedUser:
         if(this.user)
-        this.filterKey.emit(arg0+this.user.name+"-"+this.user.surName);
+          this.filterSevice.selectKey$={key:arg0+this.user.name+"-"+this.user.surName,isExtraProccess:true};
         break;
       case DefaultFilterKeys.default:
       default:
-        this.filterKey.emit(DefaultFilterKeys.default)
+        this.filterSevice.selectKey$={key:DefaultFilterKeys.default}
         break;
     }
   }
