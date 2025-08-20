@@ -4,9 +4,9 @@ import { IFilterModel } from "../abstract/ifilter-model";
 
 @Injectable()
 export class FilterHandler implements IFilterHandler{
-    handle(filterModel: IFilterModel): void {
+    handle(filterModel: IFilterModel,secondaryProcess?: (()=>void)): void {
         if(filterModel.func){
-            filterModel.func(filterModel.filterModel);
+            filterModel.func(filterModel.filterModel,secondaryProcess);
         }
     }
 }

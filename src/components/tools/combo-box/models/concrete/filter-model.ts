@@ -22,7 +22,7 @@ export class FilterModel implements IFilterModel {
   isDefault:boolean |undefined;
   key: string | undefined;
   data: object | undefined;
-  func: ((filterModel?: IFilterModel) => void) | undefined;
+  func: ((filterModel?: IFilterModel,secondaryProcess?: (()=>void)) => void) | undefined;
   isUseSelectingKey: boolean | undefined; 
 
   private _selectingKey?: string;

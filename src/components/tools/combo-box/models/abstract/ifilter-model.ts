@@ -2,7 +2,7 @@ export interface IFilterModel {
     isDefault:boolean|undefined;
     key: string | undefined;
     data: object | undefined;
-    func: ((filterModel?: IFilterModel) => void) | undefined;
+    func: ((filterModel?: IFilterModel,secondaryProcess?: (()=>void)) => void) | undefined;
 
     get filterModel():IFilterModel;
 
