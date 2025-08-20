@@ -10,7 +10,7 @@ export class DefaultFilterModel extends FilterModel implements IFilterModel {
             key: DefaultFilterKeys.default,
             isDefault: true,
             func: (_): void => {
-                console.log("girdi");
+                
                 this._caseService.getAllDesc().subscribe(response => {
                     this._listCaseService.listCase$ = response && response.length > 0 ? response : undefined;
                 })

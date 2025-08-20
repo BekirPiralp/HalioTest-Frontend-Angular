@@ -44,8 +44,6 @@ export class FilterService {
      * combo box kullanması için select key verme
      */
     set selectKey$(value:{key:string,isExtraProccess?:boolean}){
-      console.log("selectKey$")
-      console.log(value);
       this.filterSelectKeySubject.next(value);
     }
 

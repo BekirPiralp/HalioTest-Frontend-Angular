@@ -69,7 +69,7 @@ export class ComboBox {
 
   private setSelectKeySubscribed() {
     this._filterService.selectKey$.subscribe((key) => {
-      console.log(key)
+      
       this._selectedKey = key.key;
       
       if (key.isExtraProccess)
