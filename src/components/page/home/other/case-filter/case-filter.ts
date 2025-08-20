@@ -14,6 +14,16 @@ import { CasesModel } from '../../../../../models/concrete/entity-models/cases.m
 import { CaseStatusModel } from '../../../../../models/concrete/entity-models/case-status.model';
 import { forkJoin, of, tap } from 'rxjs';
 import { DefaultFilterKeys } from '../../../../../models/concrete/other/default-filter-keys';
+import { FilterListService } from '../../../../tools/combo-box/services/filter-list.service';
+import { IFilterModel } from '../../../../tools/combo-box/models/abstract/ifilter-model';
+import { ListCaseService } from './services/list-case.service';
+import { CaseNameFilterModel } from './models/case-name-filter-model';
+import { CaseDescriptionFilterModel } from './models/case-description-filter-model';
+import { CaseStatusFilterModel } from './models/case-status-filter-model';
+import { CaseStatusDescriptionFilterModel } from './models/case-status-description-filter-model';
+import { AssignedUserFilterModel } from './models/assigned-user-filter-model';
+import { OpenedUserFilterModel } from './models/opened-user-filter-model';
+import { DefaultFilterModel } from './models/default-filter-model';
 
 @Component({
   selector: 'app-home-case-filter',
@@ -22,301 +32,58 @@ import { DefaultFilterKeys } from '../../../../../models/concrete/other/default-
   styleUrl: './case-filter.css'
 })
 export class CaseFilter {
-  constructor(private _caseService:CasesService,
-    private _caseStatusService:CaseStatusService,
-    private _assignedCaseService:AssignedCaseService,
-    private _usersService:UsersService
+  constructor(private _caseService: CasesService,
+    private _caseStatusService: CaseStatusService,
+    private _assignedCaseService: AssignedCaseService,
+    private _usersService: UsersService,
+    private _filterListService: FilterListService,
+    private _listCaseService: ListCaseService
   ) {
-    
+    //defaul list upload edilecek
+    this.defaultFilterListUpload();
+    this.subscribeToFilterList();
+    this.subscribeToCasesList();
   }
-  
-  @Output() listCaseChange = new EventEmitter<CasesModel[]|undefined>();
-  
-  private _listCase:CasesModel[]|undefined;
-  
+
+  private _listCase: CasesModel[] | undefined;
   protected menu: boolean = false;
-  
-  
-  _filterList: Array<FilterModel> = [
-    /*"@case-name:",
-    "@case-description:",
-    "@status:",
-    "@status-description:",
-    "@asigned-user:",*/
-    new FilterModel({
-      key:DefaultFilterKeys.default,
-      isDefault: true,
-      func:(_):void=>{
-        this._caseService.getAllDesc().subscribe(response=>{
-          this._listCase=response && response.length > 0? response : undefined;
-          this.listCaseChange.emit(this._listCase);
-        })
-      }
-    }),
-    new FilterModel(
-      {
-        key:DefaultFilterKeys.caseName,
-        isDefault: true,
-        func:(_fModel)=>{
-          this._caseService.getAll().subscribe(response=>{
-            if(response?.length>0){
-              response.forEach((item)=>{
-                let kntrlList= this._filterList.filter(p=>p.data).map(f=>{
-                  return f.data as CasesModel;
-                });
-                
-                if(!(kntrlList.some(p=>p.id == item.id))){
-                  this._filterList.push(new FilterModel({
-                    key:`${_fModel?.key}${item.name}`,
-                    data: item,
-                    func:(filterModel)=>{
-                      //case name e göre arama yapılacak
-                      if(filterModel?.value)
-                        this._caseService.getByName(filterModel?.value).subscribe((response)=>{
-                            //case işlem; ve case list güncellencek
-                            
-                            if(response && response.length > 0)
-                              this._listCase=response;
-                            
-                            else
-                              this._listCase=undefined;
+  private _filterList?: Array<IFilterModel>;
 
-                            this.listCaseChange.emit(this._listCase);
-                          }
-                        )
-                    },
-                  }))
-                }
-              })
-            }
-          })
-        }
-      }
-    ),
-    new FilterModel(
-      <Params>{
-        key:DefaultFilterKeys.caseDescription,
-        isDefault: true,
-        isUseSelectingKey: true,
-        func:(filterModel)=>{
-          let searchKey = filterModel?.value;
-          if(searchKey?.trim()){
-            this._caseService.getBySearchtoDescription(searchKey).subscribe(response=>{
-              //case list güncellenecek
-              if(response && response.length > 0)
-                this._listCase=response;
-              
-              else
-                this._listCase=undefined;
+  defaultFilterListUpload() {
+    this._filterList = [
+      /*"@case-name:",
+      "@case-description:",
+      "@status:",
+      "@status-description:",
+      "@assigned-user:"
+      "@opened-user:",*/
+      new DefaultFilterModel(this._listCaseService,this._caseService),
+      new CaseNameFilterModel(this._caseService, this._filterListService, this._listCaseService),
+      new CaseDescriptionFilterModel(this._caseService, this._listCaseService),
+      new CaseStatusFilterModel(this._caseStatusService, this._caseService, this._filterListService, this._listCaseService),
+      new CaseStatusDescriptionFilterModel(this._caseStatusService, this._listCaseService),
+      new AssignedUserFilterModel(this._listCaseService, this._filterListService, this._caseService, this._usersService, this._assignedCaseService),
+      new OpenedUserFilterModel(this._listCaseService, this._filterListService, this._caseService, this._usersService)
+    ]
 
-              this.listCaseChange.emit(this._listCase);
-            })
-          }
-        },
-      }),
-    new FilterModel({
-      key:DefaultFilterKeys.status,
-      isDefault: true,
-      func:(filterModel)=>{
-        //enum a göre yeni sattusler ile vryant eklenecek
-         var values= Object.values(CaseStatus)
-         values.filter(v=>typeof(v) == "number")
-         .forEach((item)=>{
-            
-            if(!this._filterList.some(p=>p.value === CaseStatus[item as number])){
+    this._filterListService.filterList$=this._filterList;
+  }
 
-              this._filterList.push(new FilterModel({
-                key:`${filterModel?.key}${CaseStatus[item as number]}`,
-                func:(itemModel)=>{
-                  //ilk olarak date göre ters sıralı halde getir
-                  this._caseStatusService.getOrderedDateDesc().subscribe(response=>{
-                    //Liste yok yada boş ise çık
-                    if(!response || response.length<=0){
-                      this._listCase = undefined;
-                      this.listCaseChange.emit(this._listCase);
-                      return;
-                    }
-                      
-                    //listeyi for ile dön ve farklı case id li ilk itemı al
-                    const uniqStatusModelMap = new Map<number,CaseStatusModel>();
-                    response.forEach((itemStatus)=>{
-                      if(!uniqStatusModelMap.has(itemStatus.caseId))
-                        uniqStatusModelMap.set(itemStatus.caseId,itemStatus);
-                      }
-                    );
-                    
-                    //CaseSutasu number ı eşit olanı filtrele
-                    var newList = Array.from(uniqStatusModelMap.values()).filter(p=>p.status === item as number);
-
-                    //case nesnesi olamayanın nesnesini al
-                    let observables = newList?.filter(s=>!s.cases && s.caseId && s.caseId>0)
-                    .map(s=> this._caseService.getById(s.caseId).pipe(
-                        tap((c)=>{
-                          if(c)
-                            s.cases=c;
-                        })
-                      )
-                    )
-
-                    //observable yok ise de tetikelensin diye of(undifined) => bu tüm caseler zaten gelmiş demek
-                    const safeObservables = (observables && observables.length>0?observables:[of(undefined as unknown as CasesModel)]);
-
-                    forkJoin(safeObservables).subscribe(()=>{
-                      //yeni listeye göre case listi oluştur 
-                      
-                      let responseList:CasesModel[]|undefined = newList
-                      .map(p=>p.cases)
-                      .filter((c):c is CasesModel => !!c) || undefined; //!!c eşittir !c != true , !c ise boş olmadurumu , direk c verince liste (casesmodel|undefine)[]|undifined şekline dönüyor // runtimeda sıkıntı yok ama
-                      
-                      this._listCase = responseList;
-
-                      this.listCaseChange.emit(this._listCase);
-                    })
-                      
-                  })
-                },
-              }));
-              
-            }
-
-         });
-      },
-    }),
-    new FilterModel({
-      key:DefaultFilterKeys.statusDescription,
-      isDefault: true,
-      isUseSelectingKey: true,
-      func:(filterModel)=>{
-        if(filterModel?.value){
-          this._caseStatusService.getBySearchtoDescription(filterModel?.value).subscribe((response)=>{
-            if(!response || response.length<=0){
-              this._listCase = undefined;
-              this.listCaseChange.emit(this._listCase);
-              return;
-            }
-            
-            //aynı case 1 defa listede olsun
-            const uniqCaseStatusMap = new Map<number,CaseStatusModel>();
-            
-            response.forEach((s)=>{
-              if(!uniqCaseStatusMap.has(s.caseId))
-                uniqCaseStatusMap.set(s.caseId,s);
-            })
-            
-            
-            //gelenlere göre case list oluştur;
-            const list= Array.from(uniqCaseStatusMap.values()).map(s=>s.cases).filter((c):c is CasesModel=>!!c) || undefined;
-
-            this._listCase = list;
-            this.listCaseChange.emit(this._listCase);
-          })
-          
-        }
-      }
-    }),
-    new FilterModel({
-      key:DefaultFilterKeys.asignedUser,
-      isDefault: true,
-      func:(filterModel)=>{
-        
-        //Users listesini getir
-        this._usersService.getAll().subscribe((response)=>{
-          if(response && response.length > 0){
-            let kntrlList= this._filterList.filter(p=>p.data).map(p=>p.data as UsersModel)
-            //userları filter list e ekle 
-            response.forEach((item)=>{
-              //userların daha önce eklenmemiş olduğunu kanıtla
-              if(!kntrlList.some(p=>p.id === item.id))
-                //users filter liste ekemek için model oluşumu
-                this._filterList.push(new FilterModel({
-                  key:`${filterModel?.key}${item.name}-${item.surName}`,
-                  data:item,
-                  func:(itemModel)=>{
-                    let user = <UsersModel>(itemModel?.data);
-
-                    //user a ait listeyi getir
-                    this._assignedCaseService.getByUserId(user.id).subscribe(
-                      (responseAssigned)=>{
-                        //liste boş ise
-                        if(!responseAssigned || responseAssigned.length <=0){
-                          this._listCase = undefined;
-                          this.listCaseChange.emit(this._listCase);
-                          return;
-                        }
-
-                        //caselerin varlığı yok ise 
-                        const observables=responseAssigned.filter(s=>!s.cases && s.caseId && s.caseId>0)
-                         .map(
-                          (a)=>this._caseService.getById(a.caseId).pipe(
-                            tap(
-                              (c)=>a.cases=c
-                            )
-                          )
-                        )
-
-                        //observarebles tip güvenliği
-                        const safeObservables = (observables && observables.length > 0 ?observables:[of(undefined as unknown as CasesModel)]);
-
-                        //fork ile işleme
-                        forkJoin(safeObservables).subscribe(()=>{
-                          //listeyi oluşturma
-                          const list = responseAssigned.map(a=>a.cases).filter((c):c is CasesModel => !!c) || undefined;
-
-                          //listeyi gönderme
-                          this._listCase = list;
-                          this.listCaseChange.emit(this._listCase);
-                        })
-                      }
-                    )
-                  }
-                }));
-            });
-          }
-        })
-      },
-    }),
-    new FilterModel({
-      key:DefaultFilterKeys.openedUser,
-      isDefault: true,
-      func:(filterModel)=>{
-        
-        //Users listesini getir
-        this._usersService.getAll().subscribe((response)=>{
-          if(response && response.length > 0){
-            let kntrlList= this._filterList.filter(p=>p.data).map(p=>p.data as UsersModel)
-            //userları filter list e ekle 
-            response.forEach((item)=>{
-              //userların daha önce eklenmemiş olduğunu kanıtla
-              if(!kntrlList.some(p=>p.id === item.id))
-                //users filter liste ekemek için model oluşumu
-                this._filterList.push(new FilterModel({
-                  key:`${filterModel?.key}${item.name}-${item.surName}`,
-                  data:item,
-                  func:(itemModel)=>{
-                    let user = <UsersModel>(itemModel?.data);
-
-                    //user a ait listeyi getir
-                    if(user)
-                      this._caseService.getByUserId(user.id).subscribe(result=>{
-                        if(result && result.length>0){
-                          this._listCase = result;
-                        }else
-                          this._listCase = undefined;
-                        this.listCaseChange.emit(this._listCase);
-                      })
-                    else{
-                      this._listCase = undefined;
-                    }
-
-                    this.listCaseChange.emit(this._listCase);
-                  }
-                }));
-            });
-          }
-        })
-      },
+  subscribeToCasesList() {
+    this._listCaseService.listCase$.subscribe(result => {
+      this._listCase = result;
     })
-  ]
+  }
+
+  subscribeToFilterList() {
+    this._filterListService.filterList$.subscribe(result => {
+      if (result) {
+        this._filterList = result;
+      }
+    })
+  }
+
+  
 
   menuDisplay() {
     this.menu = true;
