@@ -1,4 +1,6 @@
 <div class="filter">
         <input class="" [(ngModel)]="_selectedKey" (ngModelChange)="filterValueChange()" (keyup.enter)="onFilterEnter()" list="filterList" name="filterCombo" id="filterCombo" placeholder="@name:">
-        <datalist id="filterList" for="filterCombo"><option *ngFor="let item of filterList"  value="{{item.key}}">{{item.key}}</option></datalist>
+        @if(filterList){
+                <datalist id="filterList" for="filterCombo"><option *ngFor="let item of filterList"  value="{{item.key}}">{{item.key}}</option></datalist>
+        }
 </div>

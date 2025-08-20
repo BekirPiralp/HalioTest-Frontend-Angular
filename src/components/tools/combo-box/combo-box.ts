@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FILTER_HANDLER } from './models/tokens/filter-handler.token';
 import { IFilterHandler } from './models/abstract/ifilter-handler';
+import { FilterService } from './services/filter.service';
+import { FilterListService } from './services/filter-list.service';
 
 @Component({
   selector: 'app-tool-combo-box',
@@ -13,40 +15,23 @@ import { IFilterHandler } from './models/abstract/ifilter-handler';
 })
 export class ComboBox {
 
-  constructor(@Inject(FILTER_HANDLER) private _filterHandler:IFilterHandler) {
-    
+  constructor(@Inject(FILTER_HANDLER) private _filterHandler:IFilterHandler,
+              private _filterService:FilterService, 
+              private _filterListService:FilterListService) 
+  {
+    this.setSelectKeySubscribed();
+    this.filterListSubscribed();
   }
   
-  @Input() filterList?:IFilterModel[];
-  @Output() filterListChange = new EventEmitter<IFilterModel[]|undefined>();
-  @Output() selectedValueChange = new EventEmitter<IFilterModel|undefined>();
-  @Input() requiredSecondaryProcess?:boolean = false;
-
-  @Input()  set selectedKey(val:string|undefined){
-    this._selectedKey = val;
-    
-    setTimeout(()=>{
-      this.filterHandle();
-      
-      if(this.requiredSecondaryProcess){
-        setTimeout(()=>{
-          this.filterHandle();
-        })
-    }
-    })
-    
-  }
-  @Output() selectedKeyChange = new EventEmitter<string|undefined>();
+  protected filterList?:IFilterModel[];
 
 
   _selectedKey: string|undefined;
+  _extraProcess?:(()=>void);
 
-
-  
-  private _formDatalist = false;
+  private _formDatalist = false; //copy paste harici yazarken enter funca girmemesi için
 
   filterValueChange() {
-    this.selectedKeyChange.emit(this._selectedKey);
 
     this._formDatalist = true;
 
@@ -54,6 +39,8 @@ export class ComboBox {
   }
 
   filterHandle(){
+    this._filterService.filterSelectedKey$=this._selectedKey;
+
     let _selectedValue = this.filterList?.find(p=>p.key === this._selectedKey);
     
     if(!_selectedValue) // for text copy paste
@@ -62,14 +49,12 @@ export class ComboBox {
     if(_selectedValue)
       _selectedValue.selectingKey = this._selectedKey;
     
-    this.selectedValueChange.emit(_selectedValue);
-    
     if(_selectedValue){
-      this._filterHandler.handle(_selectedValue);
-    
+      this._filterHandler.handle(_selectedValue,this._extraProcess);
     }else{
-      this.listClear();
+      this._filterListService.resetFilterList();
     }
+    this.extraProcessClear();
   }
 
 
@@ -81,10 +66,30 @@ export class ComboBox {
   }
 
 
-  listClear(){
-    if(this.filterList && this.filterList.some(p=>p.isDefault !==true)){
-      this.filterList=this.filterList.filter(p=>p.isDefault);
-      this.filterListChange.emit(this.filterList);
-    }
+
+  private setSelectKeySubscribed() {
+    this._filterService.selectKey$.subscribe((key) => {
+      console.log(key)
+      this._selectedKey = key.key;
+      
+      if (key.isExtraProccess)
+        this._extraProcess = this.filterHandle;
+
+      setTimeout(() => {
+        this.filterValueChange();
+      });
+
+        
+    });
+  }
+
+  extraProcessClear(){
+    this._extraProcess = undefined;
+  }
+
+  filterListSubscribed() {
+    this._filterListService.filterList$.subscribe((result)=>{
+      this.filterList = result;
+    })
   }
 }
