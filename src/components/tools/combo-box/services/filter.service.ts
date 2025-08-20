@@ -22,7 +22,7 @@ export class FilterService {
      * Tüm aboneler haberdar edilir.
      */
     set filterSelectedKey$(value:string|undefined){
-      if(value)
+      if(value && typeof value === "string")
         this.filterSelectedKeySubject.next(value);
       else
         this.filterSelectedKeySubject.next(DefaultFilterKeys.default)
