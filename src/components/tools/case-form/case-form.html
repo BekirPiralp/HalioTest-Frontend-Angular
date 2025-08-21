@@ -10,34 +10,34 @@
             <h3 class="title text-capitalize">Görev Kayıt</h3>
         </div>
         <div class="my-modal d-flex flex-column">
-            <form #caseForm="ngForm" (ngSubmit)="onSubmit($event)" (keydown.enter)="$event.preventDefault()">
+            <form [formGroup]="caseForm" (ngSubmit)="onSubmit()" (keydown.enter)="$event.preventDefault()">
                 <!-- isim -->
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input id="name" #name="ngModel" name="name" [(ngModel)]="caseForCretate.name" class="form-control" type="text" placeholder="Case Name" required minlength="3">
+                    <input id="name" formControlName="name" name="name" class="form-control" type="text" placeholder="Case Name">
                 </div>
                 <!-- date ler -->
                 <div class="d-flex form-group flex-row justify-content-between">
                     <div class=" form-date me-4">
                         <label for="startDate">Start Date:</label>
-                        <input #startDate="ngModel" name="startDate" [(ngModel)]="startDate" id="startDate" type="date" class="form-control date" required>
+                        <input formControlName="startDate" name="startDate" id="startDate" type="date" class="form-control date">
                     </div>
                     <div class=" form-date">
                         <label for="finishDate">Finish Date:</label>
-                        <input #finishDate="ngModel" name="finishDate" [(ngModel)]="caseForCretate.finishDate" id="finishDate" type="date" class="form-control date" required>
+                        <input formControlName="finishDate" name="finishDate" id="finishDate" type="date" class="form-control date">
                     </div>
                 </div>
                 <!-- tanım -->
                 <div class="form-group">
                     <label for="caseDescription">Açıklama:</label>
-                    <textarea #caseDescription="ngModel" name="caseDescription" [(ngModel)]="caseForCretate.description"
+                    <textarea formControlName="desciription" name="caseDescription"
                         id="caseDescription" type="text" class="form-control" rows="3"
-                        placeholder="Case Description" required minlength="3"></textarea>
+                        placeholder="Case Description"></textarea>
                     </div>
                 <!-- buttonlar -->
                 <div class="form-group btns w-100 mt-4 ">
                     <button class="btn btn-danger" type="reset">İptal</button>
-                    <button class="btn btn-primary" type="submit" [disabled]="caseForm['invalid']">Kaydet</button>
+                    <button class="btn btn-primary" type="submit" [disabled]="!caseForm.valid">Kaydet</button>
                 </div>
             </form>
         </div>
