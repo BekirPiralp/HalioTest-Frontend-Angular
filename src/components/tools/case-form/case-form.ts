@@ -4,6 +4,8 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 import { CommonModule } from '@angular/common';
 import { CasesModel } from '../../../models/concrete/entity-models/cases.model';
 import { UsersModel } from '../../../models/concrete/entity-models/users.model';
+import { CasesService } from '../../../services/main/cases.service';
+import alertify from 'alertifyjs';
 
 @Component({
   selector: 'app-tool-case-form',
@@ -14,7 +16,7 @@ import { UsersModel } from '../../../models/concrete/entity-models/users.model';
 export class CaseForm {
 
 
-  constructor(private thisModalService: CaseFormModalService) {
+  constructor(private thisModalService: CaseFormModalService, private casesService:CasesService) {
     const storedUser = localStorage.getItem('user');
             
       if(storedUser)
@@ -90,6 +92,10 @@ export class CaseForm {
         new Date(this.caseForm.value.finishDate!),
         this.user.id,
       );
+
+      this.casesService.create(this.caseForCretate).subscribe(()=>{
+        alertify.success("Görev Başarı ile kaydedildi.");
+      });
     }
 
   }
