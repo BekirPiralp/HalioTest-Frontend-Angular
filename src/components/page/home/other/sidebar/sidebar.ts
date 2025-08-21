@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { DefaultFilterKeys } from '../../../../../models/concrete/other/default-filter-keys';
 import { UsersModel } from '../../../../../models/concrete/entity-models/users.model';
 import { FilterService } from '../../../../tools/combo-box/services/filter.service';
+import { CaseFormModalService } from '../../../../tools/case-form/services/case-form-modal.service';
 
 @Component({
   selector: 'app-home-sidebar',
@@ -11,7 +12,7 @@ import { FilterService } from '../../../../tools/combo-box/services/filter.servi
 })
 export class Sidebar {
   
-  constructor(private filterSevice:FilterService){
+  constructor(private filterSevice:FilterService, private caseFormModalService:CaseFormModalService){
     const storedUser = localStorage.getItem('user');
         
         if(storedUser)
@@ -42,6 +43,10 @@ export class Sidebar {
         this.filterSevice.selectKey$={key:DefaultFilterKeys.default}
         break;
     }
+  }
+
+  openCaseForm() {
+    this.caseFormModalService.open();
   }
 
 }
