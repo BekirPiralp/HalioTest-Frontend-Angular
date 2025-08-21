@@ -7,10 +7,11 @@ import { CommonModule } from '@angular/common';
 import { CasesModel } from '../../../../../models/concrete/entity-models/cases.model';
 import { CasesService } from '../../../../../services/main/cases.service';
 import { ListCaseService } from '../../other/case-filter/services/list-case.service';
+import { CaseForm } from "../../../../tools/case-form/case-form";
 
 @Component({
   selector: 'app-home',
-  imports: [Navbar, Sidebar, CaseFilter, CaseList],
+  imports: [Navbar, Sidebar, CaseFilter, CaseList, CaseForm],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
