@@ -3,6 +3,7 @@ import { CaseFormModalService } from './services/case-form-modal.service';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CasesModel } from '../../../models/concrete/entity-models/cases.model';
+import { UsersModel } from '../../../models/concrete/entity-models/users.model';
 
 @Component({
   selector: 'app-tool-case-form',
@@ -14,12 +15,17 @@ export class CaseForm {
 
 
   constructor(private thisModalService: CaseFormModalService) {
+    const storedUser = localStorage.getItem('user');
+            
+      if(storedUser)
+        this.user = JSON.parse(storedUser) as UsersModel;
+
     this.subscribeToModalService();
     this.datesValidatorSetting();
     this.caseFormSetting();
   }
 
-
+  protected user:UsersModel|undefined;
 
   protected isOpen = false;
 
@@ -37,12 +43,10 @@ export class CaseForm {
   subscribeToModalService() {
     this.thisModalService.isOpen$.subscribe((result) => {
       this.isOpen = result;
-      console.log(this.caseForCretate)
     });
   }
 
   close() {
-    console.log("girdi")
     this.thisModalService.close();
   }
 
@@ -56,7 +60,6 @@ export class CaseForm {
       const finish = group.get('finishDate')?.value;
 
       if (start && finish) {
-        console.log((new Date(start)).valueOf() < (new Date(finish)).valueOf() )
         return (new Date(start)).valueOf() < (new Date(finish)).valueOf() ? null : { datesInvalid: true };
       }
 
@@ -79,20 +82,15 @@ export class CaseForm {
 
   onSubmit() {
 
-    alert(this.caseForCretate);
-    console.log(this.caseForm.value)
-
-    if (this.caseForm.valid) {
+    if (this.caseForm.valid && this.user) {
       this.caseForCretate = new CasesModel(0, 
         this.caseForm.value.name!,
         this.caseForm.value.desciription!,
         new Date(this.caseForm.value.startDate!),
         new Date(this.caseForm.value.finishDate!),
-        1
+        this.user.id,
       );
     }
 
-    console.log(this.caseForCretate);
-    console.log(this.caseForCretate?.name);
   }
 }
