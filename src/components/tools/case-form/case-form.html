@@ -1,5 +1,5 @@
 @if(isOpen){
-<div class="overlay">
+<div class="overlay" (click)="close()">
     <div class="modal-parent d-flex flex-row" (click)="$event.stopPropagation()"
         (keydown.enter)="$event.stopPropagation()">
         <div class="close-btn" (click)="close()">&times;</div>
