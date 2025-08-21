@@ -29,3 +29,28 @@
 .menuDisplay, .menuHidden{
     border: none;
 }
+
+.f-btns{
+    border-top-left-radius: 25px !important;
+    border-bottom-right-radius: 25px !important;
+}
+
+.btn-group>.f-btns:first-child{
+    border-top-left-radius: 30px !important;
+    border-bottom-left-radius: 30px !important;
+}
+
+.btn-group>.f-btns:last-child{
+    border-top-right-radius: 30px !important;
+    border-bottom-right-radius: 30px !important;
+}
+
+.btn-group>.f-btns:nth-child(2n):hover{
+    background-color: #40E0D0;
+    color: white;
+}
+
+.btn-group>.f-btns:nth-child(2n+1):hover{
+    background-color: #E04050;
+    color: white;
+}
