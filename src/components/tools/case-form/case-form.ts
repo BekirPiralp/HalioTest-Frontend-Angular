@@ -1,29 +1,38 @@
 import { Component } from '@angular/core';
 import { CaseFormModalService } from './services/case-form-modal.service';
-import { FormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CasesModel } from '../../../models/concrete/entity-models/cases.model';
 
 @Component({
   selector: 'app-tool-case-form',
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './case-form.html',
   styleUrl: './case-form.css'
 })
 export class CaseForm {
-onSubmit($event: Event) {
-  alert(this.caseForCretate);
-  console.log(this.caseForCretate)
-}
+
 
   constructor(private thisModalService: CaseFormModalService) {
-    this.subscribeToModalService()
+    this.subscribeToModalService();
+    this.datesValidatorSetting();
+    this.caseFormSetting();
   }
+
+
 
   protected isOpen = false;
 
-  protected caseForCretate:CasesModel = CasesModel.prototype;
+  protected caseForCretate: CasesModel|undefined;
 
+  protected datesValidator!: ValidatorFn;
+
+  protected caseForm!: FormGroup<{
+    name: FormControl<string | null>;
+    desciription: FormControl<string | null>;
+    startDate: FormControl<string | null>;
+    finishDate: FormControl<string | null>;
+  }>;
 
   subscribeToModalService() {
     this.thisModalService.isOpen$.subscribe((result) => {
@@ -37,4 +46,53 @@ onSubmit($event: Event) {
     this.thisModalService.close();
   }
 
+
+
+  datesValidatorSetting() {
+    this.datesValidator = (control: AbstractControl) => {
+      const group = control as FormGroup;
+
+      const start = group.get('startDate')?.value;
+      const finish = group.get('finishDate')?.value;
+
+      if (start && finish) {
+        console.log((new Date(start)).valueOf() < (new Date(finish)).valueOf() )
+        return (new Date(start)).valueOf() < (new Date(finish)).valueOf() ? null : { datesInvalid: true };
+      }
+
+      return null;
+    }
+  }
+
+
+
+  caseFormSetting() {
+    this.caseForm = new FormGroup({
+      name: new FormControl<string>('', [Validators.required, Validators.minLength(3)]),
+      desciription: new FormControl<string>("", [Validators.required, Validators.minLength(6)]),
+      startDate: new FormControl<string>("", [Validators.required]),
+      finishDate: new FormControl<string>("", [Validators.required])
+    },{validators:this.datesValidator});
+
+  }
+
+
+  onSubmit() {
+
+    alert(this.caseForCretate);
+    console.log(this.caseForm.value)
+
+    if (this.caseForm.valid) {
+      this.caseForCretate = new CasesModel(0, 
+        this.caseForm.value.name!,
+        this.caseForm.value.desciription!,
+        new Date(this.caseForm.value.startDate!),
+        new Date(this.caseForm.value.finishDate!),
+        1
+      );
+    }
+
+    console.log(this.caseForCretate);
+    console.log(this.caseForCretate?.name);
+  }
 }
