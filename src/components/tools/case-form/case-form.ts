@@ -6,6 +6,9 @@ import { CasesModel } from '../../../models/concrete/entity-models/cases.model';
 import { UsersModel } from '../../../models/concrete/entity-models/users.model';
 import { CasesService } from '../../../services/main/cases.service';
 import alertify from 'alertifyjs';
+import { CaseStatusService } from '../../../services/main/case-status.service';
+import { CaseStatusModel } from '../../../models/concrete/entity-models/case-status.model';
+import { CaseStatus } from '../../../models/concrete/other/case-status';
 
 @Component({
   selector: 'app-tool-case-form',
@@ -16,7 +19,7 @@ import alertify from 'alertifyjs';
 export class CaseForm {
 
 
-  constructor(private thisModalService: CaseFormModalService, private casesService:CasesService) {
+  constructor(private thisModalService: CaseFormModalService, private casesService:CasesService, private caseStatusService:CaseStatusService) {
     const storedUser = localStorage.getItem('user');
             
       if(storedUser)
@@ -93,8 +96,12 @@ export class CaseForm {
         this.user.id,
       );
 
-      this.casesService.create(this.caseForCretate).subscribe(()=>{
-        alertify.success("Görev Başarı ile kaydedildi.");
+      this.casesService.create(this.caseForCretate).subscribe((result)=>{
+        if(result){
+          this.caseStatusService.create(new CaseStatusModel(0,result.id,new Date(),CaseStatus.Active,"")).subscribe(()=>{
+            alertify.success("Görev Başarı ile kaydedildi.");
+          })
+        }
       });
     }
 
