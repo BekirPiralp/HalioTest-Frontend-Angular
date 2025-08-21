@@ -24,6 +24,7 @@ import { CaseStatusDescriptionFilterModel } from './models/case-status-descripti
 import { AssignedUserFilterModel } from './models/assigned-user-filter-model';
 import { OpenedUserFilterModel } from './models/opened-user-filter-model';
 import { DefaultFilterModel } from './models/default-filter-model';
+import { FilterService } from '../../../../tools/combo-box/services/filter.service';
 
 @Component({
   selector: 'app-home-case-filter',
@@ -32,12 +33,14 @@ import { DefaultFilterModel } from './models/default-filter-model';
   styleUrl: './case-filter.css'
 })
 export class CaseFilter {
+
   constructor(private _caseService: CasesService,
     private _caseStatusService: CaseStatusService,
     private _assignedCaseService: AssignedCaseService,
     private _usersService: UsersService,
     private _filterListService: FilterListService,
-    private _listCaseService: ListCaseService
+    private _listCaseService: ListCaseService,
+    private _filterService:FilterService
   ) {
     //defaul list upload edilecek
     this.defaultFilterListUpload();
@@ -48,6 +51,7 @@ export class CaseFilter {
   private _listCase: CasesModel[] | undefined;
   protected menu: boolean = false;
   private _filterList?: Array<IFilterModel>;
+  protected _fkeys =DefaultFilterKeys;
 
   defaultFilterListUpload() {
     this._filterList = [
@@ -83,7 +87,9 @@ export class CaseFilter {
     })
   }
 
-  
+  filterNavClick(arg0: string) {
+    this._filterService.selectKey$={key:arg0};
+  }
 
   menuDisplay() {
     this.menu = true;
