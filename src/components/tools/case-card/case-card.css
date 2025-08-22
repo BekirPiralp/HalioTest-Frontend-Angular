@@ -71,3 +71,37 @@
 .statusDetails{
     font-size: small;
 }
+
+.ls{
+    position: relative;
+}
+
+.descr>textarea{
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.ls>.descr{
+    display: none;
+    position: absolute;
+
+    padding: 1em;
+
+    left: 0px;
+    top: 0px;
+    transform: translateX(-100%);
+
+    border-radius: 10px;
+}
+
+.ls:hover>.descr{
+    display: block;
+}
+
+.btn-success{
+    background-color: #40E0D0 ;
+}
+
+.btn-danger{
+    background-color: #E04050;
+}

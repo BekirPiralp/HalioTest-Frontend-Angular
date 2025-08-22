@@ -21,7 +21,7 @@
                     @if(_case && _caseStatuses && _caseStatuses.length>0){
                     @for (itemStatus of _caseStatuses; track itemStatus.id ) {
                     <li class="text-start lh-sm">
-                        <span><b>{{itemStatus.date.toLocaleDateString()}}</b> tarihinde 
+                        <span><b>{{itemStatus.date.toLocaleDateString()}}</b> tarihinde
                             <b>{{itemStatus.date.toLocaleTimeString()}}</b> saatinde
                             <b>{{getStatusText(itemStatus.status)}}</b> edildi.</span>
                         @if (itemStatus.statusDescription) {
@@ -48,49 +48,77 @@
             <div class="assignedDescription">
                 <h6>Görevlendirme Açıklaması:</h6>
                 @if(_assgnedCase && _case){
-                    @if(_assgnedCase.description){
-                    <p class="mb-4 ">_assgnedCase.description</p>
-                    }@else {
-                    <p class="mb-4 text-muted">Görev açıklaması yoktur.</p>
-                    }
+                @if(_assgnedCase.description){
+                <p class="mb-4 ">_assgnedCase.description</p>
+                }@else {
+                <p class="mb-4 text-muted">Görev açıklaması yoktur.</p>
+                }
                 }@else{
-                    <p class="mb-4 ">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua.</p>
+                <p class="mb-4 ">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua.</p>
                 }
             </div>
             <hr>
             <h6 class="text-start">Açıklama:</h6>
-                @if(_case){
-                    <p class="mb-4">{{_case.description}}</p>
-                }@else {
-                    <p class="mb-4">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur
-                    adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor
-                    sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                    labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua.</p>
-                }
+            @if(_case){
+            <p class="mb-4">{{_case.description}}</p>
+            }@else {
+            <p class="mb-4">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur
+                adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor
+                sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.</p>
+            }
             }
             @else {
-                @if(_case){
-                    <p class="mb-4 lessDetail">{{_case.description}}</p>
-                }@else {
-                    <p class="mb-4 lessDetail">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur
-                    adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor
-                    sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                    labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua.</p>
-                }
+            @if(_case){
+            <p class="mb-4 lessDetail">{{_case.description}}</p>
+            }@else {
+            <p class="mb-4 lessDetail">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing
+                elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur
+                adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor
+                sit amet, Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.</p>
+            }
             }
         </div>
     </div>
     <!-- case status and users details -->
     <div class="d-flex col-3 flex-column">
         <!-- case statusu görünecek -->
-        <button type="button" class="btn btn-outline-primary m-4">
-            @if(_caseStatuses){<span>{{getStatusTextNow?getStatusTextNow:"CaseStatus"}}</span>}@else{CaseStatus}</button>
+
+        <button class="btn  btn-outline-primary m-4" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            @if(_caseStatuses){<span>{{getStatusTextNow?getStatusTextNow:"CaseStatus"}}</span>}@else{CaseStatus}
+        </button>
+        <div class="dropdown">
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">{{_caseStatus[_caseStatus.Active]}}</a></li>
+                <li><a class="dropdown-item" href="#">{{_caseStatus[_caseStatus.Assigned]}}</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li class="ls"><a class="dropdown-item" href="#">{{_caseStatus[_caseStatus.NotResolved]}}</a>
+                    <div class="descr">
+                        <textarea class="mb-1" type="text" rows="2" [placeholder]="_caseStatus[_caseStatus.NotResolved]+' description:'"></textarea>
+                        <button type="button" class="btn btn-danger bg-color-red">Gönder</button>
+                    </div>
+                </li>
+                <li class="ls"><a class="dropdown-item" href="#">{{_caseStatus[_caseStatus.Resolved]}}</a>
+                <div class="descr">
+                        <textarea class="mb-1" type="text" rows="2" [placeholder]="_caseStatus[_caseStatus.Resolved]+' description:'"></textarea>
+                        <button type="button" class="btn btn-success bg-color-turkuaz">Gönder</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- <button type="button" class="btn btn-outline-primary m-4">
+            @if(_caseStatuses){<span>{{getStatusTextNow?getStatusTextNow:"CaseStatus"}}</span>}@else{CaseStatus}
+        </button> -->
+
         <div class="text-start ps-4">
             <p style="text-overflow: clip;"> Open by <span
                     class="text-capitalize">@if(_case){<b>{{_case.openedUser?.name}}-{{_case.openedUser?.surName}}</b>}@else{<b>Opened
