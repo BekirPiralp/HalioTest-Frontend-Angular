@@ -3,6 +3,7 @@ import { DefaultFilterKeys } from '../../../../../models/concrete/other/default-
 import { UsersModel } from '../../../../../models/concrete/entity-models/users.model';
 import { FilterService } from '../../../../tools/combo-box/services/filter.service';
 import { CaseFormModalService } from '../../../../tools/case-form/services/case-form-modal.service';
+import { LocalStorageService } from '../../../../../services/other/local-storage.service';
 
 @Component({
   selector: 'app-home-sidebar',
@@ -12,11 +13,12 @@ import { CaseFormModalService } from '../../../../tools/case-form/services/case-
 })
 export class Sidebar {
   
-  constructor(private filterSevice:FilterService, private caseFormModalService:CaseFormModalService){
+  constructor(private filterSevice:FilterService, private caseFormModalService:CaseFormModalService,_localStorageService:LocalStorageService){
     const storedUser = localStorage.getItem('user');
         
         if(storedUser)
           this.user = JSON.parse(storedUser) as UsersModel;  
+    this.user = _localStorageService.loginedUser;
   }
   
   protected fKeys=DefaultFilterKeys;
