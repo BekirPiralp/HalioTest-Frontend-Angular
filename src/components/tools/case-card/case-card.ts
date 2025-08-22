@@ -24,6 +24,7 @@ export class CaseCard {
     this.setAssignedCase();
   }
   protected _more = false;
+  protected _caseStatus = CaseStatus;
   protected _case: CasesModel | undefined;
   protected _assgnedCase : AssignedCaseModel |undefined;
   protected _caseStatuses: CaseStatusModel[] | undefined;
