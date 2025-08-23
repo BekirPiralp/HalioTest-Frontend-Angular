@@ -106,6 +106,10 @@ export class CaseCard {
     } catch (error) {
       alertify.error("İşleminiz gerçekleştilemedi lütfen tekrar deneyiniz");
     }
+    finally{
+      this._caseStatusForCreate = undefined;
+      this._description = "";
+    }
 
   }
 }
