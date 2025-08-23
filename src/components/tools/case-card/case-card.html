@@ -91,25 +91,43 @@
     <div class="d-flex col-3 flex-column">
         <!-- case statusu görünecek -->
 
-        <button class="btn  btn-outline-primary m-4" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
+        <button class="btn  btn-outline-primary m-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             @if(_caseStatuses){<span>{{getStatusTextNow?getStatusTextNow:"CaseStatus"}}</span>}@else{CaseStatus}
         </button>
         <div class="dropdown">
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">{{_caseStatus[_caseStatus.Active]}}</a></li>
-                <li><a class="dropdown-item" href="#">{{_caseStatus[_caseStatus.Assigned]}}</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li class="ls"><a class="dropdown-item" href="#">{{_caseStatus[_caseStatus.NotResolved]}}</a>
+                <li><a class="dropdown-item"
+                        (click)="createStatus(_caseStatus.Active)">{{_caseStatus[_caseStatus.Active]}}</a></li>
+                <li><a class="dropdown-item"
+                        (click)="createStatus(_caseStatus.Assigned)">{{_caseStatus[_caseStatus.Assigned]}}</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li class="ls"><a class="dropdown-item">{{_caseStatus[_caseStatus.NotResolved]}}</a>
                     <div class="descr">
-                        <textarea class="mb-1" type="text" rows="2" [placeholder]="_caseStatus[_caseStatus.NotResolved]+' description:'"></textarea>
-                        <button type="button" class="btn btn-danger bg-color-red">Gönder</button>
+                        <form #notResolvedForm="ngForm"
+                            (ngSubmit)="createStatus(_caseStatus.Resolved,_description,notResolvedForm)">
+                            <textarea class="mb-1" type="text" name="notResolveTextArea" #notResolvedDescr="ngModel"
+                                [(ngModel)]="_description" rows="2"
+                                [placeholder]="_caseStatus[_caseStatus.NotResolved]+' description:'" required
+                                minlength="6"></textarea>
+                            <button type="submit" [disabled]="notResolvedDescr.invalid"
+                                class="btn btn-danger bg-color-red">Gönder</button>
+                        </form>
                     </div>
                 </li>
-                <li class="ls"><a class="dropdown-item" href="#">{{_caseStatus[_caseStatus.Resolved]}}</a>
-                <div class="descr">
-                        <textarea class="mb-1" type="text" rows="2" [placeholder]="_caseStatus[_caseStatus.Resolved]+' description:'"></textarea>
-                        <button type="button" class="btn btn-success bg-color-turkuaz">Gönder</button>
+                <li class="ls"><a class="dropdown-item"
+                        (click)="$event.stopPropagation()">{{_caseStatus[_caseStatus.Resolved]}}</a>
+                    <div class="descr">
+                        <form #resolvedForm="ngForm"
+                            (ngSubmit)="createStatus(_caseStatus.Resolved,_description,resolvedForm)">
+                            <textarea class="mb-1" type="text" rows="2" name="resolveTextArea" #resolvedDescr="ngModel"
+                                [(ngModel)]="_description"
+                                [placeholder]="_caseStatus[_caseStatus.Resolved]+' description:'" required
+                                minlength="6"></textarea>
+                            <button class="btn btn-success bg-color-turkuaz" type="submit"
+                                [disabled]="resolvedDescr.invalid">Gönder</button>
+                        </form>
                     </div>
                 </li>
             </ul>

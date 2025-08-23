@@ -5,30 +5,33 @@ import { CasesModel } from '../../../models/concrete/entity-models/cases.model';
 import { CaseStatusService } from '../../../services/main/case-status.service';
 import { AssignedCaseService } from '../../../services/main/assigned-case.service';
 import { AssignedCaseModel } from '../../../models/concrete/entity-models/assigned-case.model';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
+import alertify from 'alertifyjs';
 
 @Component({
   selector: 'app-tool-case-card',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './case-card.html',
   styleUrl: './case-card.css'
 })
-export class CaseCard {  
-  constructor( private _caseSattusService:CaseStatusService,
-    private _assignedCaseService:AssignedCaseService) {    
+export class CaseCard {
+  constructor(private _caseSattusService: CaseStatusService,
+    private _assignedCaseService: AssignedCaseService) {
   }
 
-  @Input() set case(val:CasesModel){
+  @Input() set case(val: CasesModel) {
     //kase set edlidiğinde CaseSatatuslar çekilecek ve her set ediş değiştiğinde...
-    this._case=val;
+    this._case = val;
     this.setCaseStatuses();
     this.setAssignedCase();
   }
   protected _more = false;
   protected _caseStatus = CaseStatus;
   protected _case: CasesModel | undefined;
-  protected _assgnedCase : AssignedCaseModel |undefined;
+  protected _assgnedCase: AssignedCaseModel | undefined;
   protected _caseStatuses: CaseStatusModel[] | undefined;
-  
+  protected _caseStatusForCreate: CaseStatusModel | undefined;
+  protected _description?: string;
 
   moreClick() {
     this._more = true;
@@ -39,26 +42,26 @@ export class CaseCard {
   }
 
   getStatusText(status: number) {
-    return status>0 && status<Array.from(Object.values(CaseStatus)).length ? CaseStatus[status]:"Case Status";
+    return status > 0 && status < Array.from(Object.values(CaseStatus)).length ? CaseStatus[status] : "Case Status";
   }
 
-  get getStatusNow(){
+  get getStatusNow() {
     //status listesi ters sıralı olduğu içi date göre ilk elamanı alacağız
-    if(this._caseStatuses){
-     return this._caseStatuses[0];
-    }else{
+    if (this._caseStatuses) {
+      return this._caseStatuses[0];
+    } else {
       return undefined;
     }
   }
 
-  get getStatusTextNow(){
-    return this.getStatusNow?this.getStatusText(this.getStatusNow.status):"";
+  get getStatusTextNow() {
+    return this.getStatusNow ? this.getStatusText(this.getStatusNow.status) : "";
   }
 
   setCaseStatuses() {
-    if(this._case){
-      this._caseSattusService.getByCaseIdOrderedDateDesc(this._case.id).subscribe(result=>{
-        if(!result || result.length <= 0){
+    if (this._case) {
+      this._caseSattusService.getByCaseIdOrderedDateDesc(this._case.id).subscribe(result => {
+        if (!result || result.length <= 0) {
           this._caseStatuses = undefined;
           return;
         }
@@ -70,9 +73,9 @@ export class CaseCard {
   }
 
   setAssignedCase() {
-    if(this._case){
-      this._assignedCaseService.getByCaseId(this._case.id).subscribe(result=>{
-        if(!result || result.length<=0){
+    if (this._case) {
+      this._assignedCaseService.getByCaseId(this._case.id).subscribe(result => {
+        if (!result || result.length <= 0) {
           this._assgnedCase = undefined;
           return;
         }
@@ -80,5 +83,29 @@ export class CaseCard {
         this._assgnedCase = result[0];
       })
     }
+  }
+
+  createStatus(caseStatus: CaseStatus, description?: string, ngForm?: NgForm) {
+    try {
+      if (ngForm && ngForm.invalid && this._case)
+        throw new Error("Form invalid");
+
+      this._caseStatusForCreate = new CaseStatusModel(0, this._case!.id, new Date(), caseStatus, description ? description : "");
+      this._caseSattusService.create(this._caseStatusForCreate).subscribe(result => {
+        if (!result || result.id <= 0)
+          throw new Error("Result null refrence")
+
+        // if(this._caseStatuses)
+        //   this._caseStatuses = [result,...this._caseStatuses]
+        // else
+        //   this._caseStatuses = [result];
+        this._caseStatuses = [result, ...(this._caseStatuses || [])]
+
+        alertify.success("Case durumu başarı ile güncellendi");
+      });
+    } catch (error) {
+      alertify.error("İşleminiz gerçekleştilemedi lütfen tekrar deneyiniz");
+    }
+
   }
 }
