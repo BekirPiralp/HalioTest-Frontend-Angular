@@ -76,6 +76,11 @@
     position: relative;
 }
 
+.ls:hover>a{
+    pointer-events: none;
+    background-color: #40E0D0;
+}
+
 .descr>textarea{
     border: 1px solid gray;
     border-radius: 5px;
@@ -104,4 +109,30 @@
 
 .btn-danger{
     background-color: #E04050;
+}
+
+.descr-textarea{
+    position: relative;
+}
+.descr-alert{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: translateY(100%);
+
+    padding: 0px;
+    margin: 0px;
+    line-height: 0px;
+    
+    font-style: italic;
+    font-size: smaller;
+
+    text-shadow: 0px 3px    10px whitesmoke, 
+                 0px -3px   10px whitesmoke, 
+                 -3px 0px   10px whitesmoke, 
+                 3px 0px    10px whitesmoke,
+                 3px 3px    10px whitesmoke,
+                 -3px -3px  10px whitesmoke,
+                 -3px 3px   10px whitesmoke,
+                 3px -3px   10px whitesmoke;
 }
