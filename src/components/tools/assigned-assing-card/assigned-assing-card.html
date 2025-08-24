@@ -1,0 +1,37 @@
+@if(_display){
+    <div class="overlay" (click)="this.close()">
+        @if(_case){
+            <div class="assignedCard" (click)="$event.stopPropagation()">
+                <div class="close-btn" (click)="this.close()">&times;</div>
+                <div class="title">
+                    <h1>Görev Atama</h1>
+                </div>
+                <!-- filter input -->
+                 <input class="mb-3" [(ngModel)]="_userFilterValue" (ngModelChange)="filterUser()" type="text" name="" id="" placeholder="Search User">
+                 <!-- <hr class="divider"> -->
+                 <textarea [(ngModel)]="_assignDescription" rows="3" placeholder="Desciription:"></textarea>
+                 <hr class="divider mb-3">
+                <!-- users list -->
+                @if(_usersFiltered){
+                    <ul>
+                        @for(user of _usersFiltered!;track user.id){
+                            <li class="d-flex flex-row mb-1" (click)="this.assignUserToCase(user)">
+                                <div class="d-flex flex-column">
+                                    <h6>{{user.name}} {{user.surName}}</h6>
+                                    <p class="text-muted">
+                                       <small> E-mail: {{user.email}} </small>
+                                    </p>
+                                </div>
+                                <div class="select text-center">
+                                    <p>
+                                        Seç
+                                    </p>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
+    </div>
+}
