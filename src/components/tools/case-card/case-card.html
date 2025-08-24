@@ -161,7 +161,7 @@
         </div>
         <!-- assigned değilse gözükecek -->
         @if(!_assgnedCase){
-        <button type="button" class="btn btn-outline-danger mx-4 mb-4"> Assigned</button>
+        <button type="button" class="btn btn-outline-danger mx-4 mb-4" (click)="_userAssign()"> Assigned</button>
         }
     </div>
     @if(!_more){

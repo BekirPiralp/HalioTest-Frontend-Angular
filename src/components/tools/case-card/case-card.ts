@@ -7,6 +7,7 @@ import { AssignedCaseService } from '../../../services/main/assigned-case.servic
 import { AssignedCaseModel } from '../../../models/concrete/entity-models/assigned-case.model';
 import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import alertify from 'alertifyjs';
+import { AssignedAssingService } from '../assigned-assing-card/services/assigned-assing.service';
 
 @Component({
   selector: 'app-tool-case-card',
@@ -16,7 +17,10 @@ import alertify from 'alertifyjs';
 })
 export class CaseCard {
   constructor(private _caseSattusService: CaseStatusService,
-    private _assignedCaseService: AssignedCaseService) {
+    private _assignedCaseService: AssignedCaseService, private _assignedAssignService:AssignedAssingService) 
+  {
+    this._subscribeAssignedAssignedCase();
+    this._subscribeAssignedCaseStatus();
   }
 
   @Input() set case(val: CasesModel) {
@@ -106,10 +110,32 @@ export class CaseCard {
     } catch (error) {
       alertify.error("İşleminiz gerçekleştilemedi lütfen tekrar deneyiniz");
     }
-    finally{
+    finally {
       this._caseStatusForCreate = undefined;
       this._description = "";
     }
 
+  }
+
+  _subscribeAssignedAssignedCase() {
+    this._assignedAssignService.assignedCase$.subscribe(result=>{
+      if(result && result.caseId == this._case?.id)
+        this._assgnedCase = result;
+      else
+        this._assgnedCase = undefined;
+    })
+  }
+
+  protected _userAssign() {
+    this._assignedAssignService.display$ = true;
+    this._assignedAssignService.caseForAssigned$ = this._case;
+  }
+
+  private _subscribeAssignedCaseStatus() {
+    this._assignedAssignService.caseStatus$.subscribe(result=>{
+      if(result && result.caseId === this._case?.id){
+        this._caseStatuses = [result,...this._caseStatuses?this._caseStatuses:[]];
+      }
+    })
   }
 }
