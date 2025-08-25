@@ -1,3 +1,11 @@
+.home{
+    /* background-color: red !important; */
+    background: url("/assets/images/background-image-18.jpg") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size:cover !important;
+}
+
 .content{
     flex: 1 1 auto;
     min-height: 0;

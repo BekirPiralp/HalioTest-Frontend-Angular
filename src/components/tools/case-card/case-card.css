@@ -6,6 +6,16 @@
     position: relative;
 
     border: none;
+
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(3px);
+
+    color: white;
+    text-shadow: 1px 1px 5px rgb(0, 0, 0) ;
+}
+
+.text-muted{
+    color: rgb(235, 234, 234) !important;
 }
 
 .card:hover{
@@ -13,7 +23,7 @@
 }
 
 .title i{
-    color: gray;
+    color: rgb(238, 236, 236);
 }
 
 .body{
@@ -76,7 +86,7 @@
     position: relative;
 }
 
-.ls:hover>a{
+.ls:hover>a ,li:hover>.dropdown-item{
     pointer-events: none;
     background-color: #40E0D0;
 }
