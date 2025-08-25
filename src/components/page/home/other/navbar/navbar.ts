@@ -11,7 +11,7 @@ import { LocalStorageService } from '../../../../../services/other/local-storage
 })
 export class Navbar implements OnInit {
 
-  constructor( private router: Router,_localStorageService:LocalStorageService) {
+  constructor( private router: Router, private _localStorageService:LocalStorageService) {
     if(_localStorageService.loginedUser)
       this.user = _localStorageService.loginedUser;
   }
@@ -31,7 +31,6 @@ export class Navbar implements OnInit {
   
 
   exit():void{
-    localStorage.clear();
-    this.router.navigate(['/']);
+    this._localStorageService.logout();
   }
 }

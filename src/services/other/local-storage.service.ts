@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import { UsersModel } from '../../models/concrete/entity-models/users.model';
+import alertify from 'alertifyjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
+  constructor(private router:Router){
+
+  }
 
   private user: UsersModel | undefined;
   /**
@@ -21,6 +26,12 @@ export class LocalStorageService {
   //
   set loginedUser( value){
     //todo:
+  }
+
+  logout(){
+    alertify.error("Çıkış yapılıyor")
+    localStorage.clear();
+    this.router.navigate(["/login"])
   }
 
 }
