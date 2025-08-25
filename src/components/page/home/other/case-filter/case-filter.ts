@@ -25,6 +25,7 @@ import { AssignedUserFilterModel } from './models/assigned-user-filter-model';
 import { OpenedUserFilterModel } from './models/opened-user-filter-model';
 import { DefaultFilterModel } from './models/default-filter-model';
 import { FilterService } from '../../../../tools/combo-box/services/filter.service';
+import { SpinnerService } from '../../../../tools/spinner/service/spinner.service';
 
 @Component({
   selector: 'app-home-case-filter',
@@ -40,7 +41,8 @@ export class CaseFilter {
     private _usersService: UsersService,
     private _filterListService: FilterListService,
     private _listCaseService: ListCaseService,
-    private _filterService:FilterService
+    private _filterService:FilterService,
+    private _spinnerService:SpinnerService
   ) {
     //defaul list upload edilecek
     this.defaultFilterListUpload();
@@ -66,8 +68,8 @@ export class CaseFilter {
       new CaseDescriptionFilterModel(this._caseService, this._listCaseService),
       new CaseStatusFilterModel(this._caseStatusService, this._caseService, this._filterListService, this._listCaseService),
       new CaseStatusDescriptionFilterModel(this._caseStatusService, this._listCaseService),
-      new AssignedUserFilterModel(this._listCaseService, this._filterListService, this._caseService, this._usersService, this._assignedCaseService),
-      new OpenedUserFilterModel(this._listCaseService, this._filterListService, this._caseService, this._usersService)
+      new AssignedUserFilterModel(this._listCaseService, this._filterListService, this._caseService, this._usersService, this._assignedCaseService,this._spinnerService),
+      new OpenedUserFilterModel(this._listCaseService, this._filterListService, this._caseService, this._usersService,this._spinnerService)
     ]
 
     this._filterListService.filterList$=this._filterList;
