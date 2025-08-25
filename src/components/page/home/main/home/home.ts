@@ -9,10 +9,11 @@ import { CasesService } from '../../../../../services/main/cases.service';
 import { ListCaseService } from '../../other/case-filter/services/list-case.service';
 import { CaseForm } from "../../../../tools/case-form/case-form";
 import { AssignedAssingCard } from "../../../../tools/assigned-assing-card/assigned-assing-card";
+import { Spinner } from "../../../../tools/spinner/spinner";
 
 @Component({
   selector: 'app-home',
-  imports: [Navbar, Sidebar, CaseFilter, CaseList, CaseForm, AssignedAssingCard],
+  imports: [Navbar, Sidebar, CaseFilter, CaseList, CaseForm, AssignedAssingCard, Spinner],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
