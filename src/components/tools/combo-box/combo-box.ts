@@ -6,6 +6,7 @@ import { FILTER_HANDLER } from './models/tokens/filter-handler.token';
 import { IFilterHandler } from './models/abstract/ifilter-handler';
 import { FilterService } from './services/filter.service';
 import { FilterListService } from './services/filter-list.service';
+import alertify from 'alertifyjs';
 
 @Component({
   selector: 'app-tool-combo-box',
@@ -44,7 +45,7 @@ export class ComboBox {
     let _selectedValue = this.filterList?.find(p=>p.key === this._selectedKey);
     
     if(!_selectedValue) // for text copy paste
-      _selectedValue = this.filterList?.find(p=> p.key &&this._selectedKey?.startsWith(p.key))
+      _selectedValue = this.filterList?.find(p=> p.key && this._selectedKey?.startsWith(p.key))
     
     if(_selectedValue)
       _selectedValue.selectingKey = this._selectedKey;
@@ -73,7 +74,7 @@ export class ComboBox {
       this._selectedKey = key.key;
       
       if (key.isExtraProccess)
-        this._extraProcess = this.filterHandle;
+        this._extraProcess = ()=>this.filterHandle();
 
       setTimeout(() => {
         this.filterValueChange();
